@@ -1,11 +1,14 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import productRoutes from "./routes/product.route.js";
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+app.use(express.json());
 
 //connect to mongodb
 mongoose
@@ -17,6 +20,9 @@ app.get("/", (req, res) => {
   res.send("The Jersey Trove Backend is running");
 });
 
-app.listen(5000, () => {
+//dealing with Products
+app.use("/api/products", productRoutes);
+
+app.listen(PORT, () => {
   console.log(`The server is running on PORT ${PORT}`);
 });

@@ -14,6 +14,10 @@ const productSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    quality: {
+      type: String,
+      required: true,
+    },
     sizes: {
       type: [String], // Array of strings like ['S', 'M', 'L']
       required: true,
