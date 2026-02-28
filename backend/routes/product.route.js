@@ -77,4 +77,27 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+//DELETE route to delete any specific jersey
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deleteJersey = await Product.findByIdAndDelete(id);
+
+    //GUARD CLAUSE : check if provided id matches
+    if (!deleteJersey) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Jersey not found" });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Jersey deleted successfully!",
+    });
+  } catch (error) {
+    console.log(`DATABASE ERROR: ${error.message}`);
+    return res.status(500).json({ success: false, message: "Sever error" });
+  }
+});
+
 export default router;
