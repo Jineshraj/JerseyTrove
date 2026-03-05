@@ -11,11 +11,10 @@ const AppRoutes = () => {
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
         {/* We will add /latest, /retro, etc. here later */}
-        <Route path="/login" element={<Login />} />
       </Route>
 
       {/* Put Auth routes outside the Layout if you don't want the Navbar on them */}
-      {/* <Route path="/login" element={<Login />} /> */}
+      <Route path="/login" element={<Login />} />
     </Routes>
   );
 };
