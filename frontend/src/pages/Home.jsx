@@ -78,10 +78,19 @@ const Home = () => {
             <div className="flex flex-wrap gap-4">
               <Link
                 to="/all"
-                className="flex items-center justify-center gap-2 bg-white hover:bg-gray-100 text-black px-8 py-4 rounded-none font-black uppercase tracking-wider transition-all transform hover:-translate-y-1"
+                className="relative overflow-hidden group flex items-center justify-center py-4 px-8 border-2 border-black bg-white text-sm font-black uppercase tracking-widest text-black"
               >
-                <ShoppingBag size={20} />
-                Shop Now
+                {/* The hidden black background that slides in from the left */}
+                <span className="absolute inset-0 w-full h-full bg-black -translate-x-full transition-transform duration-500 ease-out group-hover:translate-x-0"></span>
+
+                {/* The text and icon sitting on top */}
+                <span className="relative z-10 flex items-center justify-center gap-2 transition-colors duration-300 group-hover:text-white">
+                  <ShoppingBag
+                    size={20}
+                    // Gives the bag a tiny little "lift" when hovered!
+                  />
+                  Shop Now
+                </span>
               </Link>
               <Link
                 to="/retro"

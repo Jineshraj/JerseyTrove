@@ -1,9 +1,13 @@
 import { useState, useEffect, useRef } from "react";
-import { Search, User, ShoppingCart, Menu, X } from "lucide-react";
+import { Search, User, ShoppingCart, Menu, X, UserRoundX } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import NavUserDropdown from "./NavUserDropdown";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const { user } = useAuth(); //check if login or logout
 
   // Refs for scroll locking and accessibility focus
   const originalOverflow = useRef("");
@@ -89,9 +93,15 @@ const Navbar = () => {
             <button className="hover:text-black transition">
               <Search size={20} />
             </button>
-            <Link to="/login" className="hover:text-black transition">
-              <User size={20} />
-            </Link>
+            <div className="nav-actions">
+              {user ? (
+                <NavUserDropdown />
+              ) : (
+                <Link to="/login" className="hover:text-black transition">
+                  <UserRoundX size={20} />
+                </Link>
+              )}
+            </div>
             <button className="relative hover:text-black transition flex items-center">
               <ShoppingCart size={20} />
               <span className="absolute -top-2 -right-2 bg-gray-900 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">
