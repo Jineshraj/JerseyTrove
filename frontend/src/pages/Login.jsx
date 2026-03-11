@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { ArrowRight, Eye, EyeOff } from "lucide-react";
 import InputField from "../components/common/InputField";
 import { toast } from "sonner";
-import { z } from "zod";
+import { fromJSONSchema, z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "../context/AuthContext";
@@ -15,10 +15,14 @@ const loginSchema = z.object({
 });
 
 const Login = () => {
+  const { login, user } = useAuth();
+
   const [showPassword, setShowPassword] = useState(false);
 
-  const { login } = useAuth();
   const navigate = useNavigate();
+
+  //Look for the "return ticket". If it doesn't exist, default to "/"
+  const from = location.state?.from?.pathname || "/";
 
   // REACT HOOK FORM
   const {
@@ -26,6 +30,12 @@ const Login = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({ resolver: zodResolver(loginSchema) });
+
+  //If they are already logged in, kick them out!
+  if (user) {
+    // We replace the history so they can't get stuck in a back-button loop
+    return <Navigate to="/" replace />;
+  }
 
   //when clicked submit button
   const onLogin = async (data) => {
@@ -45,7 +55,7 @@ const Login = () => {
 
       toast.success("Welcome back to JerseyTrove!");
 
-      navigate("/");
+      navigate(from, { replace: true });
     } catch (err) {
       console.error(err);
     }

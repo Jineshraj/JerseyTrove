@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "../../context/AuthContext";
 import {
   CircleUserRound,
+  Target,
   UserCircle,
   UserRoundCheck,
   UserRoundCog,
@@ -14,6 +15,22 @@ const NavUserDropdown = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const dropDownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropDownRef.current && !dropDownRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const handleLogout = () => {
     logout();
     setIsMenuOpen(false);
@@ -22,7 +39,7 @@ const NavUserDropdown = () => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative" ref={dropDownRef}>
       <button
         onClick={() => setIsMenuOpen(!isMenuOpen)}
         className="hover:text-black transition flex items-center"

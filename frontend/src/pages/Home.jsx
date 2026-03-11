@@ -1,6 +1,7 @@
 // src/pages/Home.jsx
 import { ShoppingBag, ArrowRight, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import BannerVideo from "../assets/jerseytrove_banner.mp4";
 
 const Home = () => {
   // Dummy data for our Grid layout
@@ -47,15 +48,19 @@ const Home = () => {
     <div className="w-full bg-white">
       {/* 1. HERO SECTION (E-commerce Style) */}
       <section className="relative w-full h-[70vh] min-h-[500px] bg-gray-100 flex items-center overflow-hidden">
-        {/* Background Image Layer */}
+        {/* Background video Layer */}
         <div className="absolute inset-0">
-          <img
-            src="https://www.istockphoto.com/photo/soccer-jerseys-gm182790712-13199178?utm_source=unsplash&utm_medium=affiliate&utm_campaign=srp_photos_bottom&utm_content=https%3A%2F%2Funsplash.com%2Fs%2Fphotos%2Ffootball-jersey&utm_term=football+jersey%3A%3Aaffiliate-signature-content%3Aexperiment%3A66a371d3-086c-49e3-ac95-480e1f9103b2"
-            alt="Football Stadium"
+          <video
             className="w-full h-full object-cover opacity-80"
-          />
+            autoPlay
+            muted
+            playsInline
+            loop
+          >
+            <source src={BannerVideo} type="video/mp4" />
+          </video>
           {/* A gradient overlay so the text remains readable over the image */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent"></div>
+          <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/50 to-black/50"></div>
         </div>
 
         {/* Content Layer (Flexbox pushing content to the left) */}
@@ -78,17 +83,14 @@ const Home = () => {
             <div className="flex flex-wrap gap-4">
               <Link
                 to="/all"
-                className="relative overflow-hidden group flex items-center justify-center py-4 px-8 border-2 border-black bg-white text-sm font-black uppercase tracking-widest text-black"
+                className="relative overflow-hidden group flex items-center justify-center py-4 px-8 bg-white text-sm font-black uppercase tracking-widest text-black"
               >
                 {/* The hidden black background that slides in from the left */}
-                <span className="absolute inset-0 w-full h-full bg-black -translate-x-full transition-transform duration-500 ease-out group-hover:translate-x-0"></span>
+                <span className="absolute inset-0 w-full h-full bg-black -translate-x-full transition-transform duration-500 ease-out group-active:translate-x-0 group-hover:translate-x-0"></span>
 
                 {/* The text and icon sitting on top */}
-                <span className="relative z-10 flex items-center justify-center gap-2 transition-colors duration-300 group-hover:text-white">
-                  <ShoppingBag
-                    size={20}
-                    // Gives the bag a tiny little "lift" when hovered!
-                  />
+                <span className="relative z-10 flex items-center justify-center gap-2 transition-colors duration-300 group-active:text-white group-hover:text-white">
+                  <ShoppingBag size={20} />
                   Shop Now
                 </span>
               </Link>
