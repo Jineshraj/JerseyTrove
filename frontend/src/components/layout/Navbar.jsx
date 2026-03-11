@@ -15,7 +15,7 @@ const Navbar = () => {
 
   const navLinks = [
     { name: "Latest", path: "/latest" },
-    { name: "All", path: "/all" },
+    { name: "All", path: "/shop" },
     { name: "Retro", path: "/retro" },
     { name: "Clubs", path: "/clubs" },
     { name: "National Team", path: "/national" },

@@ -1,0 +1,114 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "name": "FC Barcelona 24/25 Home Jersey",
+      "price": 89.99,
+      "league": "La Liga",
+      "team": "FC Barcelona",
+      "image": "https://placehold.co/400x500/004d98/ffffff?text=Barca+Home",
+      "inStock": true,
+      "isNew": true,
+      "sizes": ["S", "M", "L", "XL"]
+    },
+    {
+      "id": "2",
+      "name": "Real Madrid 24/25 Away Jersey",
+      "price": 89.99,
+      "league": "La Liga",
+      "team": "Real Madrid",
+      "image": "https://placehold.co/400x500/ffaa00/ffffff?text=Madrid+Away",
+      "inStock": true,
+      "isNew": false,
+      "sizes": ["M", "L", "XL"]
+    },
+    {
+      "id": "3",
+      "name": "Arsenal 23/24 Home Jersey",
+      "price": 75.0,
+      "league": "Premier League",
+      "team": "Arsenal",
+      "image": "https://placehold.co/400x500/cc0000/ffffff?text=Arsenal+Home",
+      "inStock": true,
+      "isNew": false,
+      "sizes": ["S", "M", "L"]
+    },
+    {
+      "id": "4",
+      "name": "Manchester City 24/25 Third Kit",
+      "price": 95.0,
+      "league": "Premier League",
+      "team": "Manchester City",
+      "image": "https://placehold.co/400x500/66ccff/ffffff?text=Man+City+Third",
+      "inStock": false,
+      "isNew": true,
+      "sizes": ["S", "M", "L", "XL", "XXL"]
+    },
+    {
+      "id": "5",
+      "name": "FC Barcelona 10/11 Retro Home",
+      "price": 110.0,
+      "league": "La Liga",
+      "team": "FC Barcelona",
+      "image": "https://placehold.co/400x500/a50044/ffffff?text=Barca+Retro",
+      "inStock": true,
+      "isNew": false,
+      "sizes": ["M", "L"]
+    },
+    {
+      "id": "6",
+      "name": "Manchester United 24/25 Home",
+      "price": 90.0,
+      "league": "Premier League",
+      "team": "Manchester United",
+      "image": "https://placehold.co/400x500/da291c/ffffff?text=Man+Utd+Home",
+      "inStock": true,
+      "isNew": true,
+      "sizes": ["S", "L", "XL"]
+    },
+    {
+      "id": "7",
+      "name": "Liverpool 24/25 Away Kit",
+      "price": 85.0,
+      "league": "Premier League",
+      "team": "Liverpool",
+      "image": "https://placehold.co/400x500/00b2a9/ffffff?text=Liverpool+Away",
+      "inStock": true,
+      "isNew": true,
+      "sizes": ["M", "L"]
+    },
+    {
+      "id": "8",
+      "name": "FC Barcelona 23/24 Senyera Kit",
+      "price": 80.0,
+      "league": "La Liga",
+      "team": "FC Barcelona",
+      "image": "https://placehold.co/400x500/ffcd00/cc0000?text=Barca+Senyera",
+      "inStock": false,
+      "isNew": false,
+      "sizes": ["S", "M"]
+    },
+    {
+      "id": "9",
+      "name": "Atletico Madrid 24/25 Home",
+      "price": 85.0,
+      "league": "La Liga",
+      "team": "Atletico Madrid",
+      "image": "https://placehold.co/400x500/cb3524/ffffff?text=Atleti+Home",
+      "inStock": true,
+      "isNew": true,
+      "sizes": ["M", "L", "XL"]
+    },
+    {
+      "id": "10",
+      "name": "Chelsea 23/24 Third Kit",
+      "price": 70.0,
+      "league": "Premier League",
+      "team": "Chelsea",
+      "image": "https://placehold.co/400x500/034694/ffffff?text=Chelsea+Third",
+      "inStock": true,
+      "isNew": false,
+      "sizes": ["L", "XL"]
+    }
+  ]
+}
