@@ -51,7 +51,7 @@ const Home = () => {
         {/* Background video Layer */}
         <div className="absolute inset-0">
           <video
-            className="w-full h-full object-cover opacity-80"
+            className="w-full h-full object-cover object-center opacity-80 scale-[1.01] origin-center"
             autoPlay
             muted
             playsInline

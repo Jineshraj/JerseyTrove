@@ -18,6 +18,14 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    fitType: {
+      type: String,
+      required: true,
+    },
+    categories: {
+      type: [String],
+      required: true,
+    },
     sizes: {
       type: [String], // Array of strings like ['S', 'M', 'L']
       required: true,
@@ -29,6 +37,10 @@ const productSchema = new mongoose.Schema(
     lastVerifiedDate: {
       type: Date,
       default: Date.now, // The second you save a jersey, the 30-day timer starts!
+    },
+    description: {
+      type: String,
+      required: true,
     },
   },
   {

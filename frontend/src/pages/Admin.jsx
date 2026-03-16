@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   CheckCircle,
   LayoutGrid,
@@ -9,44 +9,81 @@ import {
   Trash2,
 } from "lucide-react";
 
+const initialForm = {
+  name: "",
+  team: "",
+  price: "",
+  sizes: [],
+  quality: "",
+  fitType: "",
+  categories: [],
+  imageUrl: "",
+  lastVerifiedDate: "",
+  description: "",
+};
+
 const Admin = () => {
-  // ---- State ---------------------------------------------------------------
-  // Loading flag for initial fetch.
+  // State: values this page keeps in memory
+  // True while jerseys are loading
   const [isLoading, setIsLoading] = useState(false);
-  // Raw jersey list from API.
+  // Jerseys fetched from the server
   const [allJersey, setAllJersey] = useState([]);
-  // Mobile-only list layout toggle.
+  // Mobile layout: grid or list
   const [isListView, setIsListView] = useState(false);
-  // ---- Data fetching -------------------------------------------------------
-  // Fetch inventory once on mount.
-  useEffect(() => {
-    const fetchJerseys = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetch("http://localhost:5000/api/products");
-        if (!response.ok) {
-          throw new Error("JERSEYS CANT BE FETCHED AT THE MOMENT");
-        }
-        const { data } = await response.json();
-        setAllJersey(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
+  // Form data for add/edit modal
+  const [formData, setFormData] = useState(initialForm);
+  // Modal open/close
+  const [isOpen, setIsOpen] = useState(false);
+  const [editingId, setEditingId] = useState("");
+  const nameInputRef = useRef(null);
+
+  // Data fetching
+  const fetchJerseys = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch("http://localhost:5000/api/products");
+      if (!response.ok) {
+        throw new Error("JERSEYS CANT BE FETCHED AT THE MOMENT");
       }
-    };
+      const { data } = await response.json();
+      setAllJersey(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Load jerseys once on mount
+  useEffect(() => {
     fetchJerseys();
   }, []);
 
-  // ---- Derived data --------------------------------------------------------
-  // Stable sort: oldest -> newest by lastVerifiedDate (fallback createdAt).
+  // Lock background scroll and focus the first input when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      const prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      const timer = setTimeout(() => {
+        nameInputRef.current?.focus();
+      }, 0);
+      return () => {
+        clearTimeout(timer);
+        document.body.style.overflow = prevOverflow;
+      };
+    }
+    return undefined;
+  }, [isOpen]);
+
+  // Derived data
+  // Sort by lastVerifiedDate (oldest first)
   const sortedJerseys = [...allJersey].sort((a, b) => {
     const aDate = new Date(a.lastVerifiedDate || a.createdAt || 0);
     const bDate = new Date(b.lastVerifiedDate || b.createdAt || 0);
     return aDate - bDate;
   });
 
-  // Human-readable "days ago" label for inventory freshness.
+  // Format date as "days ago"
   const daysAgo = (dateValue) => {
     if (!dateValue) return "unknown";
     const date = new Date(dateValue);
@@ -56,15 +93,24 @@ const Admin = () => {
     return diffDays === 1 ? "1 day ago" : `${diffDays} days ago`;
   };
 
-  // ---- UI -----------------------------------------------------------------
+  const editJersey = (jersey) => {
+    setEditingId(jersey._id);
+    setIsOpen((prev) => !prev);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // UI
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,_#fdebd3,_#f6f7fb_45%,_#eef7f1_80%)] text-slate-900">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-0 pb-10 pt-8 sm:gap-10 sm:px-6 sm:pb-16 sm:pt-12">
-        {/* Header: page title and primary actions */}
-        {/* Header: page title and primary actions */}
+        {/* Top area: title and actions */}
         <header className="rounded-3xl border border-white/80 bg-white/70 p-6 shadow-[0_20px_60px_-40px_rgba(15,23,42,0.6)] backdrop-blur sm:p-8">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-            {/* Title + short description */}
+            {/* Title + summary */}
             <div className="max-w-2xl space-y-3">
               <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
                 Admin Jerseys
@@ -75,7 +121,7 @@ const Admin = () => {
             </div>
             {/* Primary actions */}
             <div className="flex items-center gap-3">
-              {/* Admin-level orders view (hook up later) */}
+              {/* Orders (wire later) */}
               <button
                 className="rounded-full border border-slate-200 bg-white px-5 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                 type="button"
@@ -85,10 +131,11 @@ const Admin = () => {
                   Orders
                 </span>
               </button>
-              {/* Open add-new modal (logic later) */}
+              {/* New jersey (wire later) */}
               <button
                 className="rounded-full bg-emerald-500 px-6 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-200 transition hover:-translate-y-0.5 hover:bg-emerald-600"
                 type="button"
+                onClick={() => setIsOpen(true)}
               >
                 <span className="flex items-center gap-2">
                   <Plus className="h-4 w-4" />
@@ -99,15 +146,15 @@ const Admin = () => {
           </div>
         </header>
 
-        {/* Inventory section */}
+        {/* Jersey list */}
         <section className="grid gap-8">
-          {/* Inventory list + mobile view toggle */}
+          {/* List + mobile view switch */}
           <div className="rounded-3xl border border-slate-200 bg-white/90 p-5 shadow-[0_25px_60px_-45px_rgba(15,23,42,0.5)] backdrop-blur sm:p-8">
-            {/* Section header + mobile view toggle */}
+            {/* Section header + view switch */}
             <div className="mb-6 space-y-3">
               <div className="flex items-center justify-between gap-3">
                 <h2 className="text-2xl font-semibold">All Jerseys</h2>
-                {/* Mobile grid/list toggle */}
+                {/* Toggle grid/list on mobile */}
                 <button
                   className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md sm:hidden"
                   type="button"
@@ -131,7 +178,7 @@ const Admin = () => {
               </p>
             </div>
 
-            {/* Card grid switches to list layout on mobile toggle */}
+            {/* Cards switch layout with toggle */}
             <ul
               className={
                 isListView
@@ -140,7 +187,7 @@ const Admin = () => {
               }
             >
               {isLoading ? (
-                // Loading state
+                // Show while loading
                 <li>Loading ....</li>
               ) : (
                 sortedJerseys.map((jersey) => (
@@ -152,7 +199,7 @@ const Admin = () => {
                         : "group overflow-hidden rounded-2xl border border-slate-200 bg-white/95 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
                     }
                   >
-                    {/* Image block */}
+                    {/* Jersey image */}
                     <div
                       className={
                         isListView
@@ -165,7 +212,7 @@ const Admin = () => {
                         src={jersey.imageUrl}
                         alt={jersey.name}
                       />
-                      {/* Delete shortcut overlay for grid view */}
+                      {/* Delete icon (grid only) */}
                       {!isListView && (
                         <button
                           className="absolute right-2 top-2 rounded-full border border-rose-200 bg-white/90 p-1.5 text-rose-600 shadow-sm transition hover:border-rose-300 hover:bg-rose-50"
@@ -189,7 +236,7 @@ const Admin = () => {
                           {jersey.name}
                         </h2>
                         <span className="whitespace-nowrap text-sm font-bold text-slate-900 sm:text-base">
-                          {"₹"} {jersey.price}
+                          {"???"} {jersey.price}
                         </span>
                       </div>
 
@@ -199,7 +246,7 @@ const Admin = () => {
                         <span className="truncate">{jersey.quality}</span>
                       </div>
 
-                      {/* Verification status + action */}
+                      {/* Verified time + verify button */}
                       <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-600 sm:text-xs">
                         <span className="font-medium">
                           Verified {daysAgo(jersey.lastVerifiedDate)}
@@ -215,7 +262,7 @@ const Admin = () => {
                         </button>
                       </div>
 
-                      {/* Edit/Delete placement differs per layout */}
+                      {/* Edit/Delete layout changes in list view */}
                       {isListView ? (
                         <div className="mt-1 flex items-center gap-2">
                           <button className="flex-1 rounded-xl bg-slate-900 px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-white shadow-sm transition hover:bg-slate-800 sm:text-xs">
@@ -232,7 +279,10 @@ const Admin = () => {
                         </div>
                       ) : (
                         <button className="mt-1 w-full rounded-xl bg-slate-900 px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-white shadow-sm transition hover:bg-slate-800 sm:text-xs">
-                          <span className="flex items-center justify-center gap-2">
+                          <span
+                            className="flex items-center justify-center gap-2"
+                            onClick={() => editJersey(jersey)}
+                          >
                             <Pencil className="h-3.5 w-3.5" />
                             Edit
                           </span>
@@ -248,8 +298,10 @@ const Admin = () => {
         </section>
       </div>
 
-      <div className="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/40 px-4 py-10">
-        <div className="w-full max-w-2xl rounded-3xl border border-slate-200 bg-white p-8 shadow-[0_35px_80px_-45px_rgba(15,23,42,0.65)]">
+      <div
+        className={`fixed inset-0 z-50 ${isOpen ? "flex" : "hidden"} items-center justify-center bg-slate-900/40 px-3 py-6 sm:px-4 sm:py-10`}
+      >
+        <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border border-slate-200 bg-white p-5 shadow-[0_35px_80px_-45px_rgba(15,23,42,0.65)] sm:p-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-500">
@@ -262,6 +314,7 @@ const Admin = () => {
             <button
               className="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-800"
               type="button"
+              onClick={() => setIsOpen(false)}
             >
               Close
             </button>
@@ -276,6 +329,7 @@ const Admin = () => {
                 className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm outline-none transition focus:border-slate-300 focus:ring-2 focus:ring-emerald-100"
                 placeholder="Liverpool Home 23/24"
                 type="text"
+                ref={nameInputRef}
               />
             </div>
             <div className="space-y-2">
@@ -319,13 +373,51 @@ const Admin = () => {
             </div>
             <div className="space-y-2">
               <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-                Condition
+                Quality
               </label>
-              <input
-                className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm outline-none transition focus:border-slate-300 focus:ring-2 focus:ring-emerald-100"
-                placeholder="New / Like New"
-                type="text"
-              />
+              <select className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm outline-none transition focus:border-slate-300 focus:ring-2 focus:ring-emerald-100">
+                <option value="" disabled>
+                  Select quality
+                </option>
+                <option value="Embroidery">Embroidery</option>
+                <option value="Sublimation">Sublimation</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                Fit Type
+              </label>
+              <select className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm outline-none transition focus:border-slate-300 focus:ring-2 focus:ring-emerald-100">
+                <option value="" disabled>
+                  Select fit type
+                </option>
+                <option value="Normal">Normal</option>
+                <option value="Oversize">Oversize</option>
+                <option value="Full Sleeve">Full Sleeve</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div className="space-y-3 md:col-span-2">
+              <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                Categories
+              </label>
+              <div className="flex flex-wrap gap-3">
+                {["Retro", "Club", "National Team", "Current"].map(
+                  (category) => (
+                    <label
+                      key={category}
+                      className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 shadow-sm"
+                    >
+                      <input
+                        className="h-4 w-4 rounded border-slate-300 text-emerald-500 focus:ring-emerald-200"
+                        type="checkbox"
+                      />
+                      {category}
+                    </label>
+                  ),
+                )}
+              </div>
             </div>
             <div className="space-y-2 md:col-span-2">
               <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
@@ -366,6 +458,7 @@ const Admin = () => {
               <button
                 className="rounded-full border border-slate-200 bg-white px-5 py-2 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-800"
                 type="button"
+                onClick={() => setIsOpen(false)}
               >
                 Cancel
               </button>

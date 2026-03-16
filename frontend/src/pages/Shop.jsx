@@ -8,7 +8,7 @@ const Shop = () => {
 
   useEffect(() => {
     // Fetching from your local database
-    fetch("http://localhost:4000/products")
+    fetch("http://localhost:5000/api/products")
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);
