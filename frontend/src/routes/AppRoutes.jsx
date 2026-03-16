@@ -5,6 +5,7 @@ import Home from "../pages/Home";
 import Login from "../pages/Login";
 import ProtectedRoutes from "./ProtectedRoutes";
 import Shop from "../pages/Shop";
+import Admin from "../pages/Admin";
 
 const AppRoutes = () => {
   return (
@@ -26,6 +27,7 @@ const AppRoutes = () => {
 
       {/* Put Auth routes outside the Layout if you don't want the Navbar on them */}
       <Route path="/login" element={<Login />} />
+      <Route path="/admin" element={<Admin />} />
     </Routes>
   );
 };
