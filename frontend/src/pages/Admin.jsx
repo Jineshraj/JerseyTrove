@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   CheckCircle,
+  Home,
   LayoutGrid,
   List,
   Package,
@@ -8,6 +9,7 @@ import {
   Plus,
   Trash2,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const initialForm = {
   name: "",
@@ -34,8 +36,11 @@ const Admin = () => {
   const [formData, setFormData] = useState(initialForm);
   // Modal open/close
   const [isOpen, setIsOpen] = useState(false);
+  // Id of the jersey to be edited
   const [editingId, setEditingId] = useState("");
   const nameInputRef = useRef(null);
+
+  const navigate = useNavigate();
 
   // Data fetching
   const fetchJerseys = async () => {
@@ -95,12 +100,25 @@ const Admin = () => {
 
   const editJersey = (jersey) => {
     setEditingId(jersey._id);
+    const formattedDate = jersey.lastVerifiedDate
+      ? jersey.lastVerifiedDate.split("T")[0]
+      : "";
+    setFormData({ ...initialForm, ...jersey, lastVerifiedDate: formattedDate });
     setIsOpen((prev) => !prev);
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleCheckBoxChange = (feild, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      [feild]: prev[feild].includes(value)
+        ? prev[feild].filter((item) => item !== value)
+        : [...prev[feild], value],
+    }));
   };
 
   // UI
@@ -121,6 +139,16 @@ const Admin = () => {
             </div>
             {/* Primary actions */}
             <div className="flex items-center gap-3">
+              <button
+                onClick={() => navigate("/")}
+                className="rounded-full border border-slate-200 bg-white px-5 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                type="button"
+              >
+                <span className="flex items-center gap-2">
+                  <Home className="h-4 w-4" />
+                  Home
+                </span>
+              </button>
               {/* Orders (wire later) */}
               <button
                 className="rounded-full border border-slate-200 bg-white px-5 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
@@ -204,7 +232,7 @@ const Admin = () => {
                       className={
                         isListView
                           ? "relative aspect-square w-32 shrink-0 overflow-hidden bg-slate-100 sm:w-40"
-                          : "relative aspect-[4/5] w-full overflow-hidden bg-slate-100"
+                          : "relative aspect-square w-full overflow-hidden bg-slate-100"
                       }
                     >
                       <img
@@ -236,7 +264,7 @@ const Admin = () => {
                           {jersey.name}
                         </h2>
                         <span className="whitespace-nowrap text-sm font-bold text-slate-900 sm:text-base">
-                          {"???"} {jersey.price}
+                          {"₹"} {jersey.price}
                         </span>
                       </div>
 
@@ -271,18 +299,21 @@ const Admin = () => {
                               Edit
                             </span>
                           </button>
-                          <button className="flex-1 rounded-xl border border-rose-300 bg-rose-50 px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-rose-700 shadow-sm transition hover:border-rose-400 hover:bg-rose-100 sm:text-xs">
+                          <button
+                            className="flex-1 rounded-xl border border-rose-300 bg-rose-50 px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-rose-700 shadow-sm transition hover:border-rose-400 hover:bg-rose-100 sm:text-xs"
+                            onClick={() => editJersey(jersey)}
+                          >
                             <span className="flex items-center justify-center">
                               <Trash2 className="h-4 w-4" />
                             </span>
                           </button>
                         </div>
                       ) : (
-                        <button className="mt-1 w-full rounded-xl bg-slate-900 px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-white shadow-sm transition hover:bg-slate-800 sm:text-xs">
-                          <span
-                            className="flex items-center justify-center gap-2"
-                            onClick={() => editJersey(jersey)}
-                          >
+                        <button
+                          className="mt-1 w-full rounded-xl bg-slate-900 px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-white shadow-sm transition hover:bg-slate-800 sm:text-xs"
+                          onClick={() => editJersey(jersey)}
+                        >
+                          <span className="flex items-center justify-center gap-2">
                             <Pencil className="h-3.5 w-3.5" />
                             Edit
                           </span>
@@ -328,6 +359,9 @@ const Admin = () => {
               <input
                 className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm outline-none transition focus:border-slate-300 focus:ring-2 focus:ring-emerald-100"
                 placeholder="Liverpool Home 23/24"
+                value={formData.name}
+                onChange={handleChange}
+                name="name"
                 type="text"
                 ref={nameInputRef}
               />
@@ -339,6 +373,9 @@ const Admin = () => {
               <input
                 className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm outline-none transition focus:border-slate-300 focus:ring-2 focus:ring-emerald-100"
                 placeholder="Liverpool"
+                value={formData.team}
+                name="team"
+                onChange={handleChange}
                 type="text"
               />
             </div>
@@ -349,6 +386,9 @@ const Admin = () => {
               <input
                 className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm outline-none transition focus:border-slate-300 focus:ring-2 focus:ring-emerald-100"
                 placeholder="2399"
+                value={formData.price}
+                name="price"
+                onChange={handleChange}
                 type="number"
               />
             </div>
@@ -364,6 +404,9 @@ const Admin = () => {
                   >
                     <input
                       className="h-4 w-4 rounded border-slate-300 text-emerald-500 focus:ring-emerald-200"
+                      checked={formData.sizes.includes(size)}
+                      name="sizes"
+                      onChange={() => handleCheckBoxChange("sizes", size)}
                       type="checkbox"
                     />
                     {size}
@@ -375,7 +418,12 @@ const Admin = () => {
               <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
                 Quality
               </label>
-              <select className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm outline-none transition focus:border-slate-300 focus:ring-2 focus:ring-emerald-100">
+              <select
+                className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm outline-none transition focus:border-slate-300 focus:ring-2 focus:ring-emerald-100"
+                name="quality"
+                onChange={handleChange}
+                value={formData.quality}
+              >
                 <option value="" disabled>
                   Select quality
                 </option>
@@ -388,7 +436,12 @@ const Admin = () => {
               <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
                 Fit Type
               </label>
-              <select className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm outline-none transition focus:border-slate-300 focus:ring-2 focus:ring-emerald-100">
+              <select
+                className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm outline-none transition focus:border-slate-300 focus:ring-2 focus:ring-emerald-100"
+                name="fitType"
+                onChange={handleChange}
+                value={formData.fitType}
+              >
                 <option value="" disabled>
                   Select fit type
                 </option>
@@ -412,6 +465,11 @@ const Admin = () => {
                       <input
                         className="h-4 w-4 rounded border-slate-300 text-emerald-500 focus:ring-emerald-200"
                         type="checkbox"
+                        name="categories"
+                        value={formData.categories.includes(category)}
+                        onChange={() =>
+                          handleCheckBoxChange("categories", category)
+                        }
                       />
                       {category}
                     </label>
@@ -427,6 +485,9 @@ const Admin = () => {
                 className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm outline-none transition focus:border-slate-300 focus:ring-2 focus:ring-emerald-100"
                 placeholder="https://image.host/jersey.jpg"
                 type="text"
+                name="imageUrl"
+                value={formData.imageUrl}
+                onChange={handleChange}
               />
             </div>
             <div className="space-y-2">
@@ -436,6 +497,9 @@ const Admin = () => {
               <input
                 className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm outline-none transition focus:border-slate-300 focus:ring-2 focus:ring-emerald-100"
                 type="date"
+                name="lastVerifiedDate"
+                value={formData.lastVerifiedDate}
+                onChange={handleChange}
               />
             </div>
             <div className="space-y-2 md:col-span-2">
@@ -446,6 +510,9 @@ const Admin = () => {
                 className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm outline-none transition focus:border-slate-300 focus:ring-2 focus:ring-emerald-100"
                 placeholder="Short notes about size, fit, player name, etc."
                 rows="3"
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
               />
             </div>
             <div className="flex flex-wrap gap-3 md:col-span-2">
