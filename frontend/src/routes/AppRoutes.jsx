@@ -4,7 +4,7 @@ import Layout from "../components/layout/Layout";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import ProtectedRoutes from "./ProtectedRoutes";
-import Shop from "../pages/Shop";
+import All from "../pages/All";
 import Admin from "../pages/Admin";
 
 const AppRoutes = () => {
@@ -13,7 +13,7 @@ const AppRoutes = () => {
       {/* Any route inside this block gets the Navbar automatically! */}
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
-        <Route path="/shop" element={<Shop />} />
+        <Route path="/all" element={<All />} />
         {/* We will add /latest, /retro, etc. here later */}
 
         {/* PROTECTED ROUTES : Only enter if logged in */}

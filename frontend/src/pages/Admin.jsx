@@ -13,6 +13,7 @@ const initialForm = {
   price: "",
   sizes: [],
   quality: "",
+  collarType: "",
   fitType: "",
   categories: [],
   imageUrl: "",
@@ -22,17 +23,17 @@ const initialForm = {
 
 const Admin = () => {
   // Local state (page memory)
-  const [isLoading, setIsLoading] = useState(false);
-  const [allJersey, setAllJersey] = useState([]);
-  const [isListView, setIsListView] = useState(false);
-  const [formData, setFormData] = useState(initialForm);
-  const [isOpen, setIsOpen] = useState(false);
-  const [editingId, setEditingId] = useState("");
-  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState(null);
-  const [confirmVerifyOpen, setConfirmVerifyOpen] = useState(false);
-  const [verifyTarget, setVerifyTarget] = useState(null);
-  const nameInputRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false); // loading flag for fetch
+  const [allJersey, setAllJersey] = useState([]); // list from API
+  const [isListView, setIsListView] = useState(false); // mobile view toggle
+  const [formData, setFormData] = useState(initialForm); // form values
+  const [isOpen, setIsOpen] = useState(false); // modal open/close
+  const [editingId, setEditingId] = useState(""); // current jersey id (edit)
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false); // delete modal
+  const [deleteTarget, setDeleteTarget] = useState(null); // jersey to delete
+  const [confirmVerifyOpen, setConfirmVerifyOpen] = useState(false); // verify modal
+  const [verifyTarget, setVerifyTarget] = useState(null); // jersey to verify
+  const nameInputRef = useRef(null); // focus target when modal opens
 
   // Router helper (navigation)
   const navigate = useNavigate();

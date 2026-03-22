@@ -1,5 +1,3 @@
-import React from "react";
-
 // Props:
 // - isOpen: state from parent
 // - onClose/onSave: handlers from parent
@@ -128,6 +126,30 @@ const JerseyFormModal = ({
               <option value="Other">Other</option>
             </select>
           </div>
+          <div className="space-y-3">
+            <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+              Collar Type
+            </label>
+            <div className="flex flex-wrap gap-3">
+              {["Collar", "Round Neck"].map((type) => (
+                <label
+                  key={type}
+                  className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 shadow-sm"
+                >
+                  <input
+                    className="h-4 w-4 border-slate-300 text-emerald-500 focus:ring-emerald-200"
+                    type="radio"
+                    name="collarType"
+                    value={type}
+                    checked={formData.collarType === type}
+                    onChange={handleChange}
+                    required
+                  />
+                  {type}
+                </label>
+              ))}
+            </div>
+          </div>
           <div className="space-y-2">
             <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
               Fit Type
@@ -153,23 +175,23 @@ const JerseyFormModal = ({
               Categories
             </label>
             <div className="flex flex-wrap gap-3">
-              {["Retro", "Club", "National Team", "Current"].map(
-                (category) => (
-                  <label
-                    key={category}
-                    className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 shadow-sm"
-                  >
-                    <input
-                      className="h-4 w-4 rounded border-slate-300 text-emerald-500 focus:ring-emerald-200"
-                      type="checkbox"
-                      name="categories"
-                      checked={formData.categories.includes(category)}
-                      onChange={() => handleCheckBoxChange("categories", category)}
-                    />
-                    {category}
-                  </label>
-                ),
-              )}
+              {["Retro", "Club", "National Team", "Current"].map((category) => (
+                <label
+                  key={category}
+                  className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 shadow-sm"
+                >
+                  <input
+                    className="h-4 w-4 rounded border-slate-300 text-emerald-500 focus:ring-emerald-200"
+                    type="checkbox"
+                    name="categories"
+                    checked={formData.categories.includes(category)}
+                    onChange={() =>
+                      handleCheckBoxChange("categories", category)
+                    }
+                  />
+                  {category}
+                </label>
+              ))}
             </div>
           </div>
           <div className="space-y-2 md:col-span-2">

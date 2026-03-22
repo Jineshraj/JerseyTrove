@@ -5,9 +5,12 @@ import { formatPrice } from "../../utils/formatPrice";
 const ProductCard = ({ product }) => {
   return (
     // We use React Router's Link to wrap the whole card, pointing to the specific jersey ID
-    <Link to={`/product/${product.id}`} className="group block overflow-hidden">
+    <Link
+      to={`/product/${product.id}`}
+      className="group block overflow-hidden rounded-2xl"
+    >
       {/* Image Container - Swapped to arbitrary values [350px] to ensure Tailwind catches it */}
-      <div className="relative h-[350px] sm:h-[450px]">
+      <div className="relative h-[220px] sm:h-[350px] lg:h-[450px]">
         {/* Main Image (Visible by default) */}
         <img
           src={product.image}
@@ -26,9 +29,21 @@ const ProductCard = ({ product }) => {
 
       {/* Product Info Container */}
       <div className="relative bg-white pt-3">
-        <h3 className="text-sm font-semibold text-gray-700 group-hover:underline group-hover:underline-offset-4">
+        <h3 className="text-base font-bold text-gray-700 group-hover:underline group-hover:underline-offset-4">
           {product.name}
         </h3>
+        <div className="flex items-center justify-between">
+          {product.collarType && (
+            <p className="mt-1 text-xs font-medium tracking-wide text-gray-500">
+              {product.collarType}
+            </p>
+          )}
+          {product.quality && (
+            <p className="mt-1 text-xs font-medium tracking-wide text-gray-500">
+              {product.quality}
+            </p>
+          )}
+        </div>
 
         <p className="mt-1.5 font-bold tracking-wide text-gray-900">
           {formatPrice(product.price)}

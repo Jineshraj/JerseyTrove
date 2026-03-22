@@ -1,4 +1,3 @@
-import React from "react";
 import { CheckCircle, LayoutGrid, List, Pencil, Trash2 } from "lucide-react";
 
 // Props:
@@ -107,6 +106,10 @@ const JerseyList = ({
                   <div className="flex items-center justify-between text-[11px] font-medium text-slate-500 sm:text-xs">
                     <span className="truncate">{jersey.team}</span>
                     <span className="truncate">{jersey.quality}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-[11px] font-medium text-slate-500 sm:text-xs">
+                    <span className="truncate">{jersey.fitType}</span>
+                    <span className="truncate">{jersey.collarType}</span>
                   </div>
 
                   <div className="flex items-center justify-between gap-2 text-[11px] text-slate-600 sm:text-xs">

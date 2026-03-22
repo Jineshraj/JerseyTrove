@@ -1,5 +1,3 @@
-import React from "react";
-
 // Props:
 // - open: state from parent
 // - title/message/confirmLabel: text from parent

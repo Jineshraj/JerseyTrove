@@ -22,6 +22,10 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    collarType: {
+      type: String,
+      required: true,
+    },
     categories: {
       type: [String],
       required: true,
