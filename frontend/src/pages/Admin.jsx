@@ -10,6 +10,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const initialForm = {
   name: "",
@@ -39,6 +40,8 @@ const Admin = () => {
   // Id of the jersey to be edited
   const [editingId, setEditingId] = useState("");
   const nameInputRef = useRef(null);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState(null);
 
   const navigate = useNavigate();
 
@@ -62,6 +65,34 @@ const Admin = () => {
   // Load jerseys once on mount
   useEffect(() => {
     fetchJerseys();
+  }, []);
+
+  // Reset list view when moving to desktop (sm and up)
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 640px)");
+    const handleChange = (e) => {
+      if (e.matches) {
+        setIsListView(false);
+      }
+    };
+
+    if (media.matches) {
+      setIsListView(false);
+    }
+
+    if (media.addEventListener) {
+      media.addEventListener("change", handleChange);
+    } else {
+      media.addListener(handleChange);
+    }
+
+    return () => {
+      if (media.removeEventListener) {
+        media.removeEventListener("change", handleChange);
+      } else {
+        media.removeListener(handleChange);
+      }
+    };
   }, []);
 
   // Lock background scroll and focus the first input when modal opens
@@ -104,7 +135,19 @@ const Admin = () => {
       ? jersey.lastVerifiedDate.split("T")[0]
       : "";
     setFormData({ ...initialForm, ...jersey, lastVerifiedDate: formattedDate });
-    setIsOpen((prev) => !prev);
+    setIsOpen(true);
+  };
+
+  const openNewJersey = () => {
+    setEditingId("");
+    setFormData(initialForm);
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+    setEditingId("");
+    setFormData(initialForm);
   };
 
   const handleChange = (e) => {
@@ -119,6 +162,72 @@ const Admin = () => {
         ? prev[feild].filter((item) => item !== value)
         : [...prev[feild], value],
     }));
+  };
+
+  const handleSave = async () => {
+    try {
+      const method = editingId ? "PUT" : "POST";
+      const url = editingId
+        ? `http://localhost:5000/api/products/${editingId}`
+        : `http://localhost:5000/api/products`;
+
+      const response = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        toast.error("Couldnt save at the moment");
+        throw new Error("Failed to save");
+      }
+
+      const saved = await response.json();
+      const savedJersey = saved.product || saved.data || saved;
+      setAllJersey((prev) => {
+        if (editingId) {
+          return prev.map((item) =>
+            item._id === editingId ? savedJersey : item,
+          );
+        }
+        return [savedJersey, ...prev];
+      });
+      toast.success(editingId ? "Jersey updated" : "Jersey added");
+      closeModal();
+    } catch (err) {
+      console.error("couldnt save jersey data to the db", err);
+    }
+  };
+
+  const openDeleteConfirm = (jersey) => {
+    setDeleteTarget(jersey);
+    setConfirmDeleteOpen(true);
+  };
+
+  const closeDeleteConfirm = () => {
+    setConfirmDeleteOpen(false);
+    setDeleteTarget(null);
+  };
+
+  const handleDeleteConfirmed = async () => {
+    if (!deleteTarget?._id) return;
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/products/${deleteTarget._id}`,
+        { method: "DELETE" },
+      );
+      if (!response.ok) {
+        toast.error("Couldnt delete at the moment");
+        throw new Error("Failed to delete");
+      }
+      setAllJersey((prev) =>
+        prev.filter((item) => item._id !== deleteTarget._id),
+      );
+      toast.success("Jersey deleted");
+      closeDeleteConfirm();
+    } catch (err) {
+      console.error("couldnt delete jersey data from the db", err);
+    }
   };
 
   // UI
@@ -163,7 +272,7 @@ const Admin = () => {
               <button
                 className="rounded-full bg-emerald-500 px-6 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-200 transition hover:-translate-y-0.5 hover:bg-emerald-600"
                 type="button"
-                onClick={() => setIsOpen(true)}
+                onClick={openNewJersey}
               >
                 <span className="flex items-center gap-2">
                   <Plus className="h-4 w-4" />
@@ -224,7 +333,7 @@ const Admin = () => {
                     className={
                       isListView
                         ? "group flex overflow-hidden rounded-2xl border border-slate-200 bg-white/95 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
-                        : "group overflow-hidden rounded-2xl border border-slate-200 bg-white/95 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
+                        : "group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white/95 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
                     }
                   >
                     {/* Jersey image */}
@@ -232,7 +341,7 @@ const Admin = () => {
                       className={
                         isListView
                           ? "relative aspect-square w-32 shrink-0 overflow-hidden bg-slate-100 sm:w-40"
-                          : "relative aspect-square w-full overflow-hidden bg-slate-100"
+                          : "relative aspect-[4/5] w-full overflow-hidden bg-slate-100"
                       }
                     >
                       <img
@@ -245,6 +354,8 @@ const Admin = () => {
                         <button
                           className="absolute right-2 top-2 rounded-full border border-rose-200 bg-white/90 p-1.5 text-rose-600 shadow-sm transition hover:border-rose-300 hover:bg-rose-50"
                           aria-label="Delete jersey"
+                          type="button"
+                          onClick={() => openDeleteConfirm(jersey)}
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -255,7 +366,7 @@ const Admin = () => {
                       className={
                         isListView
                           ? "flex flex-1 flex-col gap-3 p-4"
-                          : "flex flex-col gap-2 p-3 sm:p-4"
+                          : "flex flex-1 flex-col gap-2 p-3 sm:p-4"
                       }
                     >
                       {/* Name + price */}
@@ -275,8 +386,8 @@ const Admin = () => {
                       </div>
 
                       {/* Verified time + verify button */}
-                      <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-600 sm:text-xs">
-                        <span className="font-medium">
+                      <div className="flex items-center justify-between gap-2 text-[11px] text-slate-600 sm:text-xs">
+                        <span className="min-w-0 truncate font-medium">
                           Verified {daysAgo(jersey.lastVerifiedDate)}
                         </span>
                         <button
@@ -301,7 +412,8 @@ const Admin = () => {
                           </button>
                           <button
                             className="flex-1 rounded-xl border border-rose-300 bg-rose-50 px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-rose-700 shadow-sm transition hover:border-rose-400 hover:bg-rose-100 sm:text-xs"
-                            onClick={() => editJersey(jersey)}
+                            type="button"
+                            onClick={() => openDeleteConfirm(jersey)}
                           >
                             <span className="flex items-center justify-center">
                               <Trash2 className="h-4 w-4" />
@@ -310,7 +422,7 @@ const Admin = () => {
                         </div>
                       ) : (
                         <button
-                          className="mt-1 w-full rounded-xl bg-slate-900 px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-white shadow-sm transition hover:bg-slate-800 sm:text-xs"
+                          className="mt-auto w-full rounded-xl bg-slate-900 px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-white shadow-sm transition hover:bg-slate-800 sm:text-xs"
                           onClick={() => editJersey(jersey)}
                         >
                           <span className="flex items-center justify-center gap-2">
@@ -345,7 +457,7 @@ const Admin = () => {
             <button
               className="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-800"
               type="button"
-              onClick={() => setIsOpen(false)}
+              onClick={closeModal}
             >
               Close
             </button>
@@ -423,6 +535,7 @@ const Admin = () => {
                 name="quality"
                 onChange={handleChange}
                 value={formData.quality}
+                required
               >
                 <option value="" disabled>
                   Select quality
@@ -441,6 +554,7 @@ const Admin = () => {
                 name="fitType"
                 onChange={handleChange}
                 value={formData.fitType}
+                required
               >
                 <option value="" disabled>
                   Select fit type
@@ -466,7 +580,7 @@ const Admin = () => {
                         className="h-4 w-4 rounded border-slate-300 text-emerald-500 focus:ring-emerald-200"
                         type="checkbox"
                         name="categories"
-                        value={formData.categories.includes(category)}
+                        checked={formData.categories.includes(category)}
                         onChange={() =>
                           handleCheckBoxChange("categories", category)
                         }
@@ -519,18 +633,48 @@ const Admin = () => {
               <button
                 className="rounded-full bg-emerald-500 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-200 transition hover:-translate-y-0.5 hover:bg-emerald-600"
                 type="button"
+                onClick={handleSave}
               >
                 Save Jersey
               </button>
               <button
                 className="rounded-full border border-slate-200 bg-white px-5 py-2 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-800"
                 type="button"
-                onClick={() => setIsOpen(false)}
+                onClick={closeModal}
               >
                 Cancel
               </button>
             </div>
           </form>
+        </div>
+      </div>
+
+      <div
+        className={`fixed inset-0 z-50 ${confirmDeleteOpen ? "flex" : "hidden"} items-center justify-center bg-slate-900/40 px-4 py-8`}
+      >
+        <div className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_25px_60px_-40px_rgba(15,23,42,0.6)]">
+          <h3 className="text-lg font-semibold text-slate-900">
+            Delete this jersey?
+          </h3>
+          <p className="mt-2 text-sm text-slate-600">
+            This action can’t be undone.
+          </p>
+          <div className="mt-5 flex items-center justify-end gap-3">
+            <button
+              className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-800"
+              type="button"
+              onClick={closeDeleteConfirm}
+            >
+              Cancel
+            </button>
+            <button
+              className="rounded-full border border-rose-300 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-700 transition hover:border-rose-400 hover:bg-rose-100"
+              type="button"
+              onClick={handleDeleteConfirmed}
+            >
+              Delete
+            </button>
+          </div>
         </div>
       </div>
     </main>
