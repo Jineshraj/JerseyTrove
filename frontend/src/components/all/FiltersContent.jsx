@@ -3,7 +3,7 @@ import React from "react";
 // FiltersContent
 // Reusable checkbox groups. No logic yet, just UI.
 // Optional onChange lets the parent wire filter state later.
-const FiltersContent = ({ onChange }) => {
+const FiltersContent = ({ filters, onChange }) => {
   return (
     <div className="mt-6 grid gap-6 sm:grid-cols-2 md:grid-cols-1">
       <fieldset className="space-y-3">
@@ -21,6 +21,7 @@ const FiltersContent = ({ onChange }) => {
                 type="checkbox"
                 name="fitType"
                 value={fit}
+                checked={filters.fitType.includes(fit)}
                 onChange={() => onChange?.("fitType", fit)}
               />
               {fit}
@@ -44,6 +45,7 @@ const FiltersContent = ({ onChange }) => {
                 type="checkbox"
                 name="collarType"
                 value={collar}
+                checked={filters.collarType.includes(collar)}
                 onChange={() => onChange?.("collarType", collar)}
               />
               {collar}
@@ -67,6 +69,7 @@ const FiltersContent = ({ onChange }) => {
                 type="checkbox"
                 name="quality"
                 value={quality}
+                checked={filters.quality.includes(quality)}
                 onChange={() => onChange?.("quality", quality)}
               />
               {quality}

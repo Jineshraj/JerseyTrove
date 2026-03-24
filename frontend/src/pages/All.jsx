@@ -4,6 +4,7 @@ import FilterSidebar from "../components/all/FilterSidebar";
 import MobileFilterSheet from "../components/all/MobileFilterSheet";
 import MobileSortSheet from "../components/all/MobileSortSheet";
 import SortMenu from "../components/all/SortMenu";
+import useProductFilters from "../hooks/useProductFilters";
 
 const All = () => {
   // Data state
@@ -14,15 +15,15 @@ const All = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
 
-  // Sort choice (used later when we wire logic)
-  const [sortBy, setSortBy] = useState("");
-
-  // Filter choices (used later when we wire logic)
-  const [filters, setFilters] = useState({
-    fitType: [],
-    collarType: [],
-    quality: [],
-  });
+  // Shared filter/sort logic (reusable hook)
+  const {
+    filters,
+    sortBy,
+    setSortBy,
+    toggleFilter,
+    clearFilters,
+    applyFilters,
+  } = useProductFilters();
 
   // Fetch products once on load
   useEffect(() => {
@@ -59,20 +60,8 @@ const All = () => {
     return undefined;
   }, [isFilterOpen, isSortOpen]);
 
-  // Reusable filter toggle handler (works for all filter groups)
-  const handleFilterChange = (group, value) => {
-    setFilters((prev) => ({
-      ...prev,
-      [group]: prev[group].includes(value)
-        ? prev[group].filter((item) => item !== value)
-        : [...prev[group], value],
-    }));
-  };
-
-  // Clear filters (UI only for now)
-  const handleClearFilters = () => {
-    setFilters({ fitType: [], collarType: [], quality: [] });
-  };
+  // Apply filters + sorting for display
+  const visibleProducts = applyFilters(products);
 
   return (
     <div className="bg-white">
@@ -90,13 +79,14 @@ const All = () => {
         <div className="mt-8 grid gap-8 md:grid-cols-[260px_1fr] md:gap-10 lg:grid-cols-[280px_1fr]">
           {/* Desktop filters (sidebar) */}
           <FilterSidebar
-            onClear={handleClearFilters}
-            onChange={handleFilterChange}
+            onClear={clearFilters}
+            onChange={toggleFilter}
+            filters={filters}
           />
 
           <section className="md:border-l md:border-double md:border-gray-300 md:pl-8">
             {/* Mobile top controls */}
-            <div className="mb-6 flex items-center justify-between md:hidden">
+            <div className="sticky top-16 z-20 -mx-4 mb-6 flex items-center justify-between border-b border-gray-200 bg-white/75 px-4 py-3 backdrop-blur md:hidden">
               <button
                 className="rounded-full border border-gray-200 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-wide text-gray-700 shadow-sm"
                 type="button"
@@ -123,13 +113,13 @@ const All = () => {
               <div className="flex h-64 items-center justify-center">
                 <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-black"></div>
               </div>
-            ) : products.length === 0 ? (
+            ) : visibleProducts.length === 0 ? (
               <div className="py-20 text-center">
                 <p className="text-gray-500">No jerseys found in the vault.</p>
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:gap-x-8">
-                {products.map((jersey) => (
+                {visibleProducts.map((jersey) => (
                   <ProductCard
                     key={jersey._id || jersey.id}
                     product={{
@@ -153,8 +143,9 @@ const All = () => {
       <MobileFilterSheet
         open={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
-        onClear={handleClearFilters}
-        onChange={handleFilterChange}
+        onClear={clearFilters}
+        onChange={toggleFilter}
+        filters={filters}
       />
 
       {/* Mobile sort sheet */}

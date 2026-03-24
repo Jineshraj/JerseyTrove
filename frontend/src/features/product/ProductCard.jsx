@@ -16,6 +16,8 @@ const ProductCard = ({ product }) => {
           src={product.image}
           alt={product.name}
           className="absolute inset-0 h-full w-full object-cover opacity-100 transition-opacity duration-300 group-hover:opacity-0"
+          loading="lazy"
+          decoding="async"
         />
 
         {/* Hover Image (Fades in on hover) */}
@@ -24,6 +26,8 @@ const ProductCard = ({ product }) => {
           src={product.hoverImage || product.image}
           alt={`${product.name} alternate view`}
           className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          loading="lazy"
+          decoding="async"
         />
       </div>
 

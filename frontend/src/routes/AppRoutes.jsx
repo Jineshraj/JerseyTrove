@@ -6,6 +6,10 @@ import Login from "../pages/Login";
 import ProtectedRoutes from "./ProtectedRoutes";
 import All from "../pages/All";
 import Admin from "../pages/Admin";
+import Latest from "../pages/Latest";
+import Retro from "../pages/Retro";
+import NationalTeams from "../pages/NationalTeams";
+import Clubs from "../pages/Clubs";
 
 const AppRoutes = () => {
   return (
@@ -14,7 +18,10 @@ const AppRoutes = () => {
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
         <Route path="/all" element={<All />} />
-        {/* We will add /latest, /retro, etc. here later */}
+        <Route path="/latest" element={<Latest />} />
+        <Route path="/retro" element={<Retro />} />
+        <Route path="/national" element={<NationalTeams />} />
+        <Route path="/clubs" element={<Clubs />} />
 
         {/* PROTECTED ROUTES : Only enter if logged in */}
         <Route element={<ProtectedRoutes />}>

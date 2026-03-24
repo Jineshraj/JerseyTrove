@@ -1,5 +1,6 @@
 import React from "react";
 import FiltersContent from "./FiltersContent";
+import { X } from "lucide-react";
 
 // Mobile bottom sheet for filters
 // Props:
@@ -7,7 +8,7 @@ import FiltersContent from "./FiltersContent";
 // - onClose: handler from parent
 // - onClear: handler from parent
 // - onChange: optional handler for checkbox changes
-const MobileFilterSheet = ({ open, onClose, onClear, onChange }) => {
+const MobileFilterSheet = ({ open, onClose, onClear, onChange, filters }) => {
   return (
     <div
       className={`fixed inset-0 z-40 ${open ? "flex" : "hidden"} items-end md:hidden`}
@@ -34,12 +35,12 @@ const MobileFilterSheet = ({ open, onClose, onClear, onChange }) => {
               type="button"
               onClick={onClose}
             >
-              Close
+              <X color="black" size={20} />
             </button>
           </div>
         </div>
 
-        <FiltersContent onChange={onChange} />
+        <FiltersContent filters={filters} onChange={onChange} />
       </div>
     </div>
   );
