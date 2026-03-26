@@ -126,7 +126,7 @@ const All = () => {
                       id: jersey._id || jersey.id,
                       name: jersey.name,
                       price: jersey.price,
-                      image: jersey.imageUrl || jersey.image,
+                      image: jersey.images?.[0] || jersey.imageUrl || jersey.image,
                       hoverImage: jersey.hoverImage,
                       collarType: jersey.collarType,
                       quality: jersey.quality,

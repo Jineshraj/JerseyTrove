@@ -34,9 +34,9 @@ const productSchema = new mongoose.Schema(
       type: [String], // Array of strings like ['S', 'M', 'L']
       required: true,
     },
-    imageUrl: {
-      type: String,
-      required: true, // We will just paste a Google Images link here for now
+    images: {
+      type: [String],
+      required: true, // Multiple images (first one used as thumbnail)
     },
     lastVerifiedDate: {
       type: Date,

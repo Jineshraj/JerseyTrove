@@ -14,8 +14,9 @@ const sampleProducts = [
     collarType: "Round Neck",
     categories: ["Retro", "Club"],
     sizes: ["S", "M", "L", "XL"],
-    imageUrl:
+    images: [
       "https://images.unsplash.com/photo-1519356162333-4d49b21f1c58?auto=format&fit=crop&w=800&q=80",
+    ],
     lastVerifiedDate: new Date(Date.now() - 16 * 24 * 60 * 60 * 1000),
     description: "Classic Barca stripes with 2015-era detailing.",
   },
@@ -28,8 +29,9 @@ const sampleProducts = [
     collarType: "Collar",
     categories: ["Retro", "Club"],
     sizes: ["M", "L", "XL"],
-    imageUrl:
+    images: [
       "https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=800&q=80",
+    ],
     lastVerifiedDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
     description: "Iconic red retro with classic collar finish.",
   },
@@ -42,8 +44,9 @@ const sampleProducts = [
     collarType: "Round Neck",
     categories: ["National Team", "Current"],
     sizes: ["S", "M", "L"],
-    imageUrl:
+    images: [
       "https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=800&q=80",
+    ],
     lastVerifiedDate: new Date(Date.now() - 9 * 24 * 60 * 60 * 1000),
     description: "World champions kit with crisp blue-white panels.",
   },
@@ -56,8 +59,9 @@ const sampleProducts = [
     collarType: "Round Neck",
     categories: ["Club", "Current"],
     sizes: ["S", "M", "L", "XL", "XXL"],
-    imageUrl:
+    images: [
       "https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=800&q=80",
+    ],
     lastVerifiedDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
     description: "Modern white kit with subtle gold accents.",
   },
@@ -70,8 +74,9 @@ const sampleProducts = [
     collarType: "Round Neck",
     categories: ["Retro", "National Team"],
     sizes: ["S", "M", "L", "XL"],
-    imageUrl:
+    images: [
       "https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf?auto=format&fit=crop&w=800&q=80",
+    ],
     lastVerifiedDate: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000),
     description: "Classic Brazil colors from the 2002 era.",
   },
@@ -84,8 +89,9 @@ const sampleProducts = [
     collarType: "Collar",
     categories: ["Retro", "Club"],
     sizes: ["M", "L", "XL"],
-    imageUrl:
+    images: [
       "https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf?auto=format&fit=crop&w=800&q=80",
+    ],
     lastVerifiedDate: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000),
     description: "Red and black stripes with retro collar.",
   },
@@ -98,8 +104,9 @@ const sampleProducts = [
     collarType: "Collar",
     categories: ["Retro", "Club"],
     sizes: ["S", "M", "L", "XL"],
-    imageUrl:
+    images: [
       "https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=800&q=80",
+    ],
     lastVerifiedDate: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000),
     description: "Treble-era inspired red with classic detailing.",
   },
@@ -112,8 +119,9 @@ const sampleProducts = [
     collarType: "Round Neck",
     categories: ["National Team", "Current"],
     sizes: ["S", "M", "L"],
-    imageUrl:
+    images: [
       "https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?auto=format&fit=crop&w=800&q=80",
+    ],
     lastVerifiedDate: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
     description: "Clean away kit with bold color blocking.",
   },

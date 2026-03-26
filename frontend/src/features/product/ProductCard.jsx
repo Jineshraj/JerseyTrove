@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { formatPrice } from "../../utils/formatPrice";
+import { formatPrice } from "../../utils/formatPrice.js";
 
 const ProductCard = ({ product }) => {
   return (

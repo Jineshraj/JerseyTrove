@@ -3,6 +3,9 @@
 // - onClose/onSave: handlers from parent
 // - formData: state object from parent
 // - handleChange/handleCheckBoxChange: handlers from parent
+
+import { file } from "zod";
+
 // - nameInputRef: ref from parent for auto-focus
 const JerseyFormModal = ({
   isOpen,
@@ -12,6 +15,8 @@ const JerseyFormModal = ({
   handleChange,
   handleCheckBoxChange,
   nameInputRef,
+  setPrimaryImage,
+  setExtraImage,
 }) => {
   return (
     <div
@@ -195,17 +200,48 @@ const JerseyFormModal = ({
             </div>
           </div>
           <div className="space-y-2 md:col-span-2">
-            <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-              Image URL
-            </label>
-            <input
-              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm outline-none transition focus:border-slate-300 focus:ring-2 focus:ring-emerald-100"
-              placeholder="https://image.host/jersey.jpg"
-              type="text"
-              name="imageUrl"
-              value={formData.imageUrl}
-              onChange={handleChange}
-            />
+            <div className="flex">
+              <div>
+                <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                  Image Thumbnail URL
+                </label>
+                <input
+                  className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm outline-none transition focus:border-slate-300 focus:ring-2 focus:ring-emerald-100"
+                  placeholder="https://image.host/jersey.jpg"
+                  type="text"
+                  name="images"
+                  value={formData.images?.[0] || ""}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                  Upload
+                </label>
+                <input
+                  className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm outline-none transition focus:border-slate-300 focus:ring-2 focus:ring-emerald-100"
+                  placeholder="https://image.host/jersey.jpg"
+                  type="file"
+                  accept="image/*"
+                  name="images"
+                  onChange={(e) => setPrimaryImage(e.target.files[0])}
+                />
+              </div>
+            </div>
+            <div>
+              <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                Image Upload (Other)
+              </label>
+              <input
+                className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm outline-none transition focus:border-slate-300 focus:ring-2 focus:ring-emerald-100"
+                placeholder="https://image.host/jersey.jpg"
+                type="file"
+                accept="image/*"
+                multiple
+                name="images"
+                onChange={(e) => setExtraImage([...e.target.files])}
+              />
+            </div>
           </div>
           <div className="space-y-2">
             <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">

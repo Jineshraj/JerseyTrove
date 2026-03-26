@@ -64,6 +64,14 @@ const useProductFilters = () => {
       result.sort((a, b) => (b.price || 0) - (a.price || 0));
     }
 
+    if (sortBy === "newest") {
+      result.sort((a, b) => {
+        const aDate = new Date(a.createdAt || a.lastVerifiedDate || 0);
+        const bDate = new Date(b.createdAt || b.lastVerifiedDate || 0);
+        return bDate - aDate;
+      });
+    }
+
     return result;
   };
 

@@ -5,6 +5,10 @@ import AdminHeader from "../components/admin/AdminHeader.jsx";
 import JerseyList from "../components/admin/JerseyList.jsx";
 import JerseyFormModal from "../components/admin/JerseyFormModal.jsx";
 import ConfirmModal from "../components/admin/ConfirmModal.jsx";
+import {
+  uploadToCloudinary,
+  uploadMultipleToCloudinary,
+} from "../utils/Cloudinary.js";
 
 // Shape of the jersey form (used for reset + default values)
 const initialForm = {
@@ -16,7 +20,7 @@ const initialForm = {
   collarType: "",
   fitType: "",
   categories: [],
-  imageUrl: "",
+  images: [],
   lastVerifiedDate: "",
   description: "",
 };
@@ -33,6 +37,8 @@ const Admin = () => {
   const [deleteTarget, setDeleteTarget] = useState(null); // jersey to delete
   const [confirmVerifyOpen, setConfirmVerifyOpen] = useState(false); // verify modal
   const [verifyTarget, setVerifyTarget] = useState(null); // jersey to verify
+  const [primaryImage, setPrimaryImage] = useState(null);
+  const [extraImage, setExtraImage] = useState([]);
   const nameInputRef = useRef(null); // focus target when modal opens
 
   // Router helper (navigation)
@@ -127,7 +133,18 @@ const Admin = () => {
     const formattedDate = jersey.lastVerifiedDate
       ? jersey.lastVerifiedDate.split("T")[0]
       : "";
-    setFormData({ ...initialForm, ...jersey, lastVerifiedDate: formattedDate });
+    const imageList =
+      Array.isArray(jersey.images) && jersey.images.length > 0
+        ? jersey.images
+        : jersey.imageUrl
+          ? [jersey.imageUrl]
+          : [];
+    setFormData({
+      ...initialForm,
+      ...jersey,
+      images: imageList,
+      lastVerifiedDate: formattedDate,
+    });
     setIsOpen(true);
   };
 
@@ -135,6 +152,8 @@ const Admin = () => {
   const openNewJersey = () => {
     setEditingId("");
     setFormData(initialForm);
+    setPrimaryImage(null);
+    setExtraImage([]);
     setIsOpen(true);
   };
 
@@ -143,11 +162,20 @@ const Admin = () => {
     setIsOpen(false);
     setEditingId("");
     setFormData(initialForm);
+    setPrimaryImage(null);
+    setExtraImage([]);
   };
 
   // Generic input handler for text/select/textarea
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if (name === "images") {
+      setFormData((prev) => ({
+        ...prev,
+        images: value ? [value, ...(prev.images?.slice(1) || [])] : [],
+      }));
+      return;
+    }
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -170,6 +198,25 @@ const Admin = () => {
   // Save action (POST for new, PUT for edit)
   const handleSave = async () => {
     try {
+      let imageUrls = formData.images || [];
+
+      //upload new / edit primary image thumbnail
+      if (primaryImage) {
+        const url = await uploadToCloudinary(primaryImage);
+        imageUrls = [url, ...imageUrls.slice(1)];
+      }
+
+      //upload new / edit extra images(if old ones present)
+      if (extraImage.length > 0) {
+        const extraUrls = await uploadMultipleToCloudinary(extraImage);
+        imageUrls = [imageUrls[0], ...extraUrls];
+      }
+
+      const finalData = {
+        ...formData,
+        images: imageUrls,
+      };
+
       const method = editingId ? "PUT" : "POST";
       const url = editingId
         ? `http://localhost:5000/api/products/${editingId}`
@@ -178,7 +225,7 @@ const Admin = () => {
       const response = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(finalData),
       });
 
       if (!response.ok) {
@@ -304,6 +351,8 @@ const Admin = () => {
         handleChange={handleChange}
         handleCheckBoxChange={handleCheckBoxChange}
         nameInputRef={nameInputRef}
+        setPrimaryImage={setPrimaryImage}
+        setExtraImage={setExtraImage}
       />
 
       {/* Confirm delete modal (state + handlers) */}

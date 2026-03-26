@@ -73,7 +73,7 @@ const JerseyList = ({
                 >
                   <img
                     className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
-                    src={jersey.imageUrl}
+                    src={jersey.images?.[0] || jersey.imageUrl}
                     alt={jersey.name}
                   />
                   {!isListView && (
