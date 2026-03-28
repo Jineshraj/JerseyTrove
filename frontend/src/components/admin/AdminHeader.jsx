@@ -18,7 +18,7 @@ const AdminHeader = ({ onHome, onNew }) => {
           </p>
         </div>
         {/* Header actions (handlers come from parent) */}
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3 max-sm:gap-2">
           <button
             onClick={onHome}
             className="rounded-full border border-slate-200 bg-white px-5 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
@@ -39,13 +39,23 @@ const AdminHeader = ({ onHome, onNew }) => {
             </span>
           </button>
           <button
-            className="rounded-full bg-emerald-500 px-6 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-200 transition hover:-translate-y-0.5 hover:bg-emerald-600"
+            className="rounded-full bg-emerald-500 px-6 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-200 transition hover:-translate-y-0.5 hover:bg-emerald-600 max-sm:hidden"
             type="button"
             onClick={onNew}
           >
             <span className="flex items-center gap-2">
               <Plus className="h-4 w-4" />
               New Jersey
+            </span>
+          </button>
+          <button
+            className="rounded-full bg-emerald-500 px-6 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-200 transition hover:-translate-y-0.5 hover:bg-emerald-600 sm:hidden"
+            type="button"
+            onClick={onNew}
+          >
+            <span className="flex items-center gap-2">
+              <Plus className="h-4 w-4" />
+              New
             </span>
           </button>
         </div>

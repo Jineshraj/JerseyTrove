@@ -39,6 +39,7 @@ const Admin = () => {
   const [verifyTarget, setVerifyTarget] = useState(null); // jersey to verify
   const [primaryImage, setPrimaryImage] = useState(null);
   const [extraImage, setExtraImage] = useState([]);
+  const [isSaving, setIsSaving] = useState(false);
   const nameInputRef = useRef(null); // focus target when modal opens
 
   // Router helper (navigation)
@@ -198,6 +199,7 @@ const Admin = () => {
   // Save action (POST for new, PUT for edit)
   const handleSave = async () => {
     try {
+      setIsSaving(true);
       let imageUrls = formData.images || [];
 
       //upload new / edit primary image thumbnail
@@ -248,6 +250,8 @@ const Admin = () => {
       closeModal();
     } catch (err) {
       console.error("couldnt save jersey data to the db", err);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -325,7 +329,7 @@ const Admin = () => {
 
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,_#fdebd3,_#f6f7fb_45%,_#eef7f1_80%)] text-slate-900">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-0 pb-10 pt-8 sm:gap-10 sm:px-6 sm:pb-16 sm:pt-12">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-3 pb-10 pt-8 sm:gap-10 sm:px-6 sm:pb-16 sm:pt-12">
         {/* Header actions are handlers (navigation + open modal) */}
         <AdminHeader onHome={() => navigate("/")} onNew={openNewJersey} />
 
@@ -353,6 +357,7 @@ const Admin = () => {
         nameInputRef={nameInputRef}
         setPrimaryImage={setPrimaryImage}
         setExtraImage={setExtraImage}
+        isSaving={isSaving}
       />
 
       {/* Confirm delete modal (state + handlers) */}

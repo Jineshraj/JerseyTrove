@@ -10,6 +10,7 @@ import Latest from "../pages/Latest";
 import Retro from "../pages/Retro";
 import NationalTeams from "../pages/NationalTeams";
 import Clubs from "../pages/Clubs";
+import ProductDetails from "../pages/ProductDetails";
 
 const AppRoutes = () => {
   return (
@@ -22,6 +23,7 @@ const AppRoutes = () => {
         <Route path="/retro" element={<Retro />} />
         <Route path="/national" element={<NationalTeams />} />
         <Route path="/clubs" element={<Clubs />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
 
         {/* PROTECTED ROUTES : Only enter if logged in */}
         <Route element={<ProtectedRoutes />}>

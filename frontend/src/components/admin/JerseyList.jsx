@@ -49,7 +49,7 @@ const JerseyList = ({
           className={
             isListView
               ? "grid grid-cols-1 gap-4"
-              : "grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+              : "grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
           }
         >
           {isLoading ? (
@@ -67,7 +67,7 @@ const JerseyList = ({
                 <div
                   className={
                     isListView
-                      ? "relative aspect-square w-32 shrink-0 overflow-hidden bg-slate-100 sm:w-40"
+                      ? "relative aspect-square w-28 shrink-0 overflow-hidden bg-slate-100 sm:w-40"
                       : "relative aspect-[4/5] w-full overflow-hidden bg-slate-100"
                   }
                 >
@@ -90,7 +90,7 @@ const JerseyList = ({
                 <div
                   className={
                     isListView
-                      ? "flex flex-1 flex-col gap-3 p-4"
+                      ? "flex min-w-0 flex-1 flex-col gap-2 p-3 sm:p-4"
                       : "flex flex-1 flex-col gap-2 p-3 sm:p-4"
                   }
                 >
@@ -112,7 +112,7 @@ const JerseyList = ({
                     <span className="truncate">{jersey.collarType}</span>
                   </div>
 
-                  <div className="flex items-center justify-between gap-2 text-[11px] text-slate-600 sm:text-xs">
+                  <div className="flex min-w-0 items-center justify-between gap-2 text-[11px] text-slate-600 sm:text-xs">
                     <span className="min-w-0 truncate font-medium">
                       Verified {daysAgo(jersey.lastVerifiedDate)}
                     </span>

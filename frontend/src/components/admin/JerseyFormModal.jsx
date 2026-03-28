@@ -17,6 +17,7 @@ const JerseyFormModal = ({
   nameInputRef,
   setPrimaryImage,
   setExtraImage,
+  isSaving,
 }) => {
   return (
     <div
@@ -201,9 +202,9 @@ const JerseyFormModal = ({
           </div>
           <div className="space-y-2 md:col-span-2">
             <div className="flex">
-              <div>
-                <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-                  Image Thumbnail URL
+              <div className="flex-1">
+                <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 inline">
+                  Thumbnail URL
                 </label>
                 <input
                   className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm outline-none transition focus:border-slate-300 focus:ring-2 focus:ring-emerald-100"
@@ -214,18 +215,18 @@ const JerseyFormModal = ({
                   onChange={handleChange}
                 />
               </div>
-              <div>
+              <div className="flex-1">
                 <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
                   Upload
+                  <input
+                    className="w-full font-light rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm outline-none transition focus:border-slate-300 focus:ring-2 focus:ring-emerald-100"
+                    placeholder="Click to upload"
+                    type="file"
+                    accept="image/*"
+                    name="images"
+                    onChange={(e) => setPrimaryImage(e.target.files[0])}
+                  />
                 </label>
-                <input
-                  className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm outline-none transition focus:border-slate-300 focus:ring-2 focus:ring-emerald-100"
-                  placeholder="https://image.host/jersey.jpg"
-                  type="file"
-                  accept="image/*"
-                  name="images"
-                  onChange={(e) => setPrimaryImage(e.target.files[0])}
-                />
               </div>
             </div>
             <div>
@@ -270,16 +271,27 @@ const JerseyFormModal = ({
           </div>
           <div className="flex flex-wrap gap-3 md:col-span-2">
             <button
-              className="rounded-full bg-emerald-500 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-200 transition hover:-translate-y-0.5 hover:bg-emerald-600"
+              className={`rounded-full px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-200 transition ${
+                isSaving
+                  ? "cursor-not-allowed bg-emerald-300"
+                  : "bg-emerald-500 hover:-translate-y-0.5 hover:bg-emerald-600"
+              }`}
               type="button"
               onClick={onSave}
+              disabled={isSaving}
             >
-              Save Jersey
+              <span className="inline-flex items-center gap-2">
+                {isSaving && (
+                  <span className="h-3 w-3 animate-spin rounded-full border-2 border-white/70 border-t-transparent" />
+                )}
+                {isSaving ? "Saving..." : "Save Jersey"}
+              </span>
             </button>
             <button
               className="rounded-full border border-slate-200 bg-white px-5 py-2 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-800"
               type="button"
               onClick={onClose}
+              disabled={isSaving}
             >
               Cancel
             </button>

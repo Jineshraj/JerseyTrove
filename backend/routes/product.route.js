@@ -43,6 +43,32 @@ router.get("/", async (req, res) => {
   }
 });
 
+// GET route to fetch a single jersey by id
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const jersey = await Product.findById(id);
+
+    if (!jersey) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Jersey not found" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: jersey,
+    });
+  } catch (error) {
+    console.log(`DATABASE ERROR : ${error.message}`);
+    return res.status(500).json({
+      error: "Failed to fetch jersey",
+      details: error.message,
+    });
+  }
+});
+
 // UPDATE route to edit a specific jersey
 router.put("/:id", async (req, res) => {
   const { id } = req.params; // This grabs the unique ID from the end of the URL

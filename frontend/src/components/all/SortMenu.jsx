@@ -28,7 +28,7 @@ const SortMenu = ({ value, onSelect }) => {
   return (
     <div className="relative" ref={menuRef}>
       <button
-        className="relative overflow-hidden group flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-wide text-gray-700 shadow-sm transition hover:border-gray-300 hover:text-gray-900"
+        className="relative overflow-hidden group flex items-center gap-2 rounded-full border border-black bg-white px-4 py-2 text-xs font-semibold uppercase tracking-wide text-gray-700 shadow-sm transition hover:border-gray-300 hover:text-gray-900"
         type="button"
         onClick={() => setOpen((prev) => !prev)}
       >
