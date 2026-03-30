@@ -1,6 +1,8 @@
-import { ArrowLeftCircle, MoveLeft } from "lucide-react";
+import { ArrowLeftCircle, LucideShoppingCart, MoveLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { useCart } from "../context/CartContext";
+import { toast } from "sonner";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -38,6 +40,13 @@ const ProductDetails = () => {
 
     fetchProduct();
   }, [id]);
+
+  const { addToCart } = useCart();
+
+  const handleCart = (product) => {
+    addToCart(product);
+    toast.success("Item Added to Cart");
+  };
 
   return (
     <div className="bg-white">
@@ -131,6 +140,47 @@ const ProductDetails = () => {
                   </div>
                 </div>
 
+                {product.sizes?.length > 0 && (
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                      Sizes Available
+                    </p>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {product.sizes.map((size) => (
+                        <span
+                          key={size}
+                          className=" border border-slate-200 px-5 py-2 text-sm font-semibold text-slate-600"
+                        >
+                          {size}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex flex-col flex-wrap gap-3">
+                  <button
+                    type="button"
+                    className="rounded-full bg-black px-6 py-3 text-sm font-semibold text-white shadow-sm transition border border-white hover:bg-white hover:text-black hover:border-black fo flex justify-center items-center gap-2.5"
+                    onClick={() => handleCart(product)}
+                  >
+                    <LucideShoppingCart size={20} /> <span>Add to Cart</span>
+                  </button>
+
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      className="rounded-full flex-2 bg-black px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
+                    >
+                      Buy Now
+                    </button>
+                  </div>
+                </div>
+                {product.description && (
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm font-light text-slate-600">
+                    {product.description}
+                  </div>
+                )}
                 {product.categories?.length > 0 && (
                   <div className="flex flex-wrap gap-2">
                     {product.categories.map((cat) => (
@@ -143,45 +193,6 @@ const ProductDetails = () => {
                     ))}
                   </div>
                 )}
-
-                {product.sizes?.length > 0 && (
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-                      Sizes Available
-                    </p>
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      {product.sizes.map((size) => (
-                        <span
-                          key={size}
-                          className="rounded-full border border-slate-200 px-3 py-1 text-xs font-semibold text-slate-600"
-                        >
-                          {size}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {product.description && (
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-                    {product.description}
-                  </div>
-                )}
-
-                <div className="flex flex-wrap gap-3">
-                  <button
-                    type="button"
-                    className="rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
-                  >
-                    Add to Cart
-                  </button>
-                  <button
-                    type="button"
-                    className="rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-900"
-                  >
-                    Save for Later
-                  </button>
-                </div>
               </div>
             </div>
           )

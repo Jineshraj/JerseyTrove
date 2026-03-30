@@ -1,13 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import { Search, User, ShoppingCart, Menu, X, UserRoundX } from "lucide-react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import NavUserDropdown from "./NavUserDropdown";
+import { useCart } from "../../context/CartContext";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const { user } = useAuth(); //check if login or logout
+  const { cartItems } = useCart(); //collect cart items
 
   // Refs for scroll locking and accessibility focus
   const originalOverflow = useRef("");
@@ -21,6 +23,7 @@ const Navbar = () => {
     { name: "National Team", path: "/national" },
   ];
 
+  const navigate = useNavigate();
   // The "Pro" UseEffect: Handles Resize, Esc Key, Scroll Lock, and Focus
   useEffect(() => {
     const onResize = () => {
@@ -102,10 +105,13 @@ const Navbar = () => {
                 </Link>
               )}
             </div>
-            <button className="relative hover:text-black transition flex items-center">
+            <button
+              className="relative hover:text-black transition flex items-center"
+              onClick={() => navigate("/cart")}
+            >
               <ShoppingCart size={20} />
               <span className="absolute -top-2 -right-2 bg-gray-900 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">
-                0
+                {cartItems.length}
               </span>
             </button>
 

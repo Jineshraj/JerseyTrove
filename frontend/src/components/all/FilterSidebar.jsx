@@ -17,7 +17,7 @@ const FilterSidebar = ({ onClear, onChange, filters }) => {
             onClick={onClear}
           >
             {/* The hidden black background that slides in from the left */}
-            <span className="absolute inset-0 w-full h-full bg-black -translate-x-full transition-transform duration-500 ease-out group-active:translate-x-0 group-hover:translate-x-0"></span>
+            <span className="absolute inset-0 h-full w-full rounded-full bg-black -translate-x-[110%] transition-transform duration-500 ease-out group-active:translate-x-0 group-hover:translate-x-0"></span>
 
             {/* The text and icon sitting on top */}
             <span className="relative z-10 flex items-center justify-center gap-2 transition-colors duration-300 group-active:text-white group-hover:text-white">
