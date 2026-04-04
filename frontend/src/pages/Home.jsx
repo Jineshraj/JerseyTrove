@@ -80,8 +80,8 @@ const Home = () => {
               THE ART <br /> OF THE KIT.
             </h1>
             <p className="mt-6 text-base text-white/70">
-              Crafted kits, curated drops, and heritage pieces that feel as
-              good as they look.
+              Crafted kits, curated drops, and heritage pieces that feel as good
+              as they look.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link
@@ -147,12 +147,12 @@ const Home = () => {
 
       {/* FIT & DETAILS GRID */}
       <section className="bg-white">
-        <div className="mx-auto max-w-[1200px] px-4 pb-12 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[1200px] max-h-[100vh] px-4 pb-12 sm:px-6 lg:px-8">
           <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">
             Categorical Geometry
           </p>
           <div className="mt-6 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-            <div className="relative aspect-square overflow-hidden rounded-3xl bg-slate-100 sm:aspect-[3/4] lg:aspect-[4/5]">
+            <div className="relative aspect-square overflow-nr rounded-3xl bg-slate-100 sm:aspect-[3/4] lg:aspect-[4/5]">
               <img
                 src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80"
                 alt="Oversized fit"
