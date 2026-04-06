@@ -147,60 +147,74 @@ const Home = () => {
 
       {/* FIT & DETAILS GRID */}
       <section className="bg-white">
-        <div className="mx-auto max-w-[1200px] max-h-[100vh] px-4 pb-12 sm:px-6 lg:px-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">
+        <div className="mx-auto max-w-[1200px] px-4 pb-12 sm:px-6 lg:px-8">
+          <p className="text-xs font-bold uppercase tracking-[0.25em] text-slate-400">
             Categorical Geometry
           </p>
-          <div className="mt-6 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-            <div className="relative aspect-square overflow-nr rounded-3xl bg-slate-100 sm:aspect-[3/4] lg:aspect-[4/5]">
+
+          {/* 1. THE FIX: We added lg:h-[600px] to lock the height on desktops */}
+          <div className="mt-6 grid gap-6 lg:h-[600px] lg:grid-cols-[1.05fr_0.95fr]">
+            {/* LEFT COLUMN */}
+            {/* 2. THE FIX: We use lg:aspect-auto to turn off the infinite scaling, and lg:h-full to make it fit the 600px box */}
+            <div className="group relative aspect-[4/5] cursor-pointer overflow-hidden rounded-3xl bg-slate-100 shadow-sm lg:aspect-auto lg:h-full">
               <img
                 src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80"
                 alt="Oversized fit"
-                className="h-full w-full object-cover"
+                className="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-105"
                 loading="lazy"
                 decoding="async"
               />
-              <div className="absolute bottom-4 left-4 rounded-full bg-white/90 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-700">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+              <div className="absolute bottom-5 left-5 rounded-full bg-white/90 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-900 shadow-sm backdrop-blur transition-transform duration-500 group-hover:-translate-y-1">
                 Oversized
               </div>
             </div>
 
-            <div className="grid gap-6">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-slate-100 sm:aspect-[16/9]">
+            {/* RIGHT COLUMN (Converted to a flex column so the children can flex-1 to split the height) */}
+            <div className="flex flex-col gap-6 lg:h-full">
+              {/* TOP RIGHT */}
+              {/* 3. THE FIX: flex-1 makes this take up exactly 50% of the remaining height */}
+              <div className="group relative aspect-[4/3] flex-1 cursor-pointer overflow-hidden rounded-3xl bg-slate-100 shadow-sm lg:aspect-auto">
                 <img
                   src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1200&q=80"
                   alt="Collar detail"
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-105"
                   loading="lazy"
                   decoding="async"
                 />
-                <div className="absolute bottom-4 left-4 rounded-full bg-white/90 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-700">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                <div className="absolute bottom-5 left-5 rounded-full bg-white/90 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-900 shadow-sm backdrop-blur transition-transform duration-500 group-hover:-translate-y-1">
                   Collar
                 </div>
               </div>
 
-              <div className="grid gap-6 sm:grid-cols-2">
-                <div className="relative aspect-square overflow-hidden rounded-3xl bg-slate-100">
+              {/* BOTTOM RIGHT SPLIT */}
+              {/* 4. THE FIX: flex-1 makes this row take up the other 50% of the height */}
+              <div className="grid flex-1 gap-6 sm:grid-cols-2">
+                <div className="group relative aspect-square cursor-pointer overflow-hidden rounded-3xl bg-slate-100 shadow-sm lg:aspect-auto lg:h-full">
                   <img
                     src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80"
                     alt="Normal fit"
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-105"
                     loading="lazy"
                     decoding="async"
                   />
-                  <div className="absolute bottom-4 left-4 rounded-full bg-white/90 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-700">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                  <div className="absolute bottom-5 left-5 rounded-full bg-white/90 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-900 shadow-sm backdrop-blur transition-transform duration-500 group-hover:-translate-y-1">
                     Normal
                   </div>
                 </div>
-                <div className="relative aspect-square overflow-hidden rounded-3xl bg-slate-100">
+
+                <div className="group relative aspect-square cursor-pointer overflow-hidden rounded-3xl bg-slate-100 shadow-sm lg:aspect-auto lg:h-full">
                   <img
                     src="https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=900&q=80"
                     alt="Full sleeve"
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-105"
                     loading="lazy"
                     decoding="async"
                   />
-                  <div className="absolute bottom-4 left-4 rounded-full bg-white/90 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-700">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                  <div className="absolute bottom-5 left-5 rounded-full bg-white/90 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-900 shadow-sm backdrop-blur transition-transform duration-500 group-hover:-translate-y-1">
                     Full Sleeve
                   </div>
                 </div>
