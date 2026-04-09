@@ -2,7 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { formatPrice } from "../../utils/formatPrice.js";
 
-const ProductCard = ({ product, theme = "light" }) => {
+const ProductCard = ({
+  product,
+  theme = "light",
+  imageHeightClassName = "h-[220px] sm:h-[350px] lg:h-[450px]",
+}) => {
   const isDark = theme === "dark";
 
   return (
@@ -12,7 +16,7 @@ const ProductCard = ({ product, theme = "light" }) => {
       className="group block overflow-hidden rounded-2xl"
     >
       {/* Image Container - Swapped to arbitrary values [350px] to ensure Tailwind catches it */}
-      <div className="relative h-[220px] sm:h-[350px] lg:h-[450px]">
+      <div className={`relative ${imageHeightClassName}`}>
         {/* Main Image (Visible by default) */}
         <img
           src={product.image}

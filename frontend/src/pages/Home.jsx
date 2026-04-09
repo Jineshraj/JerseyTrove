@@ -240,7 +240,7 @@ const Home = () => {
             </Link>
           </div>
 
-          <div className="mt-10 -mx-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+          <div className="no-scrollbar mt-10 -mx-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
             {isRetroLoading ? (
               <div className="flex h-44 items-center justify-center">
                 <div className="h-8 w-8 animate-spin rounded-full border-4 border-white/30 border-t-white"></div>
@@ -258,6 +258,7 @@ const Home = () => {
                   >
                     <ProductCard
                       theme="dark"
+                      imageHeightClassName="h-[300px] sm:h-[350px] lg:h-[450px]"
                       product={{
                         id: jersey._id || jersey.id,
                         name: jersey.name,
