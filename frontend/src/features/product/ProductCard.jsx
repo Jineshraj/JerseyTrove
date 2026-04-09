@@ -2,7 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { formatPrice } from "../../utils/formatPrice.js";
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, theme = "light" }) => {
+  const isDark = theme === "dark";
+
   return (
     // We use React Router's Link to wrap the whole card, pointing to the specific jersey ID
     <Link
@@ -32,24 +34,40 @@ const ProductCard = ({ product }) => {
       </div>
 
       {/* Product Info Container */}
-      <div className="relative bg-white pt-3">
-        <h3 className="text-base font-bold text-gray-700 group-hover:underline group-hover:underline-offset-4">
+      <div className={`relative pt-3 ${isDark ? "bg-transparent" : "bg-white"}`}>
+        <h3
+          className={`text-base font-bold group-hover:underline group-hover:underline-offset-4 ${
+            isDark ? "text-white" : "text-gray-700"
+          }`}
+        >
           {product.name}
         </h3>
         <div className="flex items-center justify-between">
           {product.collarType && (
-            <p className="mt-1 text-xs font-medium tracking-wide text-gray-500">
+            <p
+              className={`mt-1 text-xs font-medium tracking-wide ${
+                isDark ? "text-white/70" : "text-gray-500"
+              }`}
+            >
               {product.collarType}
             </p>
           )}
           {product.quality && (
-            <p className="mt-1 text-xs font-medium tracking-wide text-gray-500">
+            <p
+              className={`mt-1 text-xs font-medium tracking-wide ${
+                isDark ? "text-white/70" : "text-gray-500"
+              }`}
+            >
               {product.quality}
             </p>
           )}
         </div>
 
-        <p className="mt-1.5 font-bold tracking-wide text-gray-900">
+        <p
+          className={`mt-1.5 font-bold tracking-wide ${
+            isDark ? "text-white" : "text-gray-900"
+          }`}
+        >
           {formatPrice(product.price)}
         </p>
       </div>

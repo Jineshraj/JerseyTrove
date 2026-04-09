@@ -1,58 +1,55 @@
+import { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import ProductCard from "../features/product/ProductCard";
 import BannerVideo from "../assets/jerseytrove_banner.mp4";
+import collarJersey from "../assets/collarJersey.jpeg";
+import fullSleeve from "../assets/fullSleeve.jpeg";
+import oversizeJersey from "../assets/oversizeJersey.jpeg";
+import normalJersey from "../assets/normalJersey.jpeg";
 
 const Home = () => {
-  const featuredJerseys = [
-    {
-      id: 1,
-      team: "FC Barcelona",
-      edition: "23/24 Home Kit",
-      price: "Rs 2,499",
-      image:
-        "https://images.unsplash.com/photo-1614632537190-23e4146777db?auto=format&fit=crop&w=800&q=80",
-    },
-    {
-      id: 2,
-      team: "Arsenal",
-      edition: "03/04 Invincibles Retro",
-      price: "Rs 2,999",
-      image:
-        "https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=800&q=80",
-    },
-    {
-      id: 3,
-      team: "Manchester City",
-      edition: "23/24 Away Kit",
-      price: "Rs 2,499",
-      image:
-        "https://images.unsplash.com/photo-1560272564-c83b66b1ad12?auto=format&fit=crop&w=800&q=80",
-    },
-  ];
+  const [retroJerseys, setRetroJerseys] = useState([]);
+  const [isRetroLoading, setIsRetroLoading] = useState(true);
 
-  const retroJerseys = [
-    {
-      id: 1,
-      name: "Barcelona 2010 Away",
-      price: "Rs 2,199",
-      image:
-        "https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=900&q=80",
-    },
-    {
-      id: 2,
-      name: "Milan 2004 Classic",
-      price: "Rs 2,399",
-      image:
-        "https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf?auto=format&fit=crop&w=900&q=80",
-    },
-    {
-      id: 3,
-      name: "United 1999",
-      price: "Rs 2,299",
-      image:
-        "https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=900&q=80",
-    },
-  ];
+  useEffect(() => {
+    const fetchRetroProducts = async () => {
+      try {
+        setIsRetroLoading(true);
+        const response = await fetch("http://localhost:5000/api/products");
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
+        }
+
+        const payload = await response.json();
+        const items = payload.data || payload.products || payload;
+        const products = Array.isArray(items) ? items : [];
+
+        const retroItems = products.filter((product) => {
+          const category = String(product.category || "").toLowerCase();
+          const collection = String(product.collection || "").toLowerCase();
+          const type = String(product.type || "").toLowerCase();
+          const name = String(product.name || "").toLowerCase();
+
+          return (
+            category.includes("retro") ||
+            collection.includes("retro") ||
+            type.includes("retro") ||
+            name.includes("retro")
+          );
+        });
+
+        setRetroJerseys(retroItems.slice(0, 10));
+      } catch (error) {
+        console.error("Error fetching retro jerseys:", error);
+        setRetroJerseys([]);
+      } finally {
+        setIsRetroLoading(false);
+      }
+    };
+
+    fetchRetroProducts();
+  }, []);
 
   return (
     <div className="w-full bg-white">
@@ -115,52 +112,21 @@ const Home = () => {
         </div>
       </section>
 
-      {/* STATEMENT */}
-      <section className="bg-white">
-        <div className="mx-auto grid max-w-[1200px] gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.2fr_0.8fr] lg:px-8">
-          <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-slate-400">
-              A Symphony of Heritage
-            </p>
-            <h2 className="mt-4 text-3xl font-semibold text-slate-900 sm:text-4xl">
-              Heritage and performance, tailored for matchdays and the street.
-            </h2>
-          </div>
-          <div className="space-y-4 text-sm text-slate-600">
-            <p>
-              We collect limited drops, retro reissues, and everyday icons so
-              your wardrobe feels like a highlight reel.
-            </p>
-            <p>
-              Built for comfort, finished with detail, and verified regularly so
-              you can shop with confidence.
-            </p>
-            <Link
-              to="/latest"
-              className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-900"
-            >
-              See latest drops <ArrowRight size={14} />
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* FIT & DETAILS GRID */}
-      <section className="bg-white">
+      <section className="bg-white mt-12">
         <div className="mx-auto max-w-[1200px] px-4 pb-12 sm:px-6 lg:px-8">
-          <p className="text-xs font-bold uppercase tracking-[0.25em] text-slate-400">
-            Categorical Geometry
+          <p className="text-3xl font-semibold text-slate-900 sm:text-4xl">
+            Shop By Category
           </p>
 
-          {/* 1. THE FIX: We added lg:h-[600px] to lock the height on desktops */}
           <div className="mt-6 grid gap-6 lg:h-[600px] lg:grid-cols-[1.05fr_0.95fr]">
             {/* LEFT COLUMN */}
-            {/* 2. THE FIX: We use lg:aspect-auto to turn off the infinite scaling, and lg:h-full to make it fit the 600px box */}
-            <div className="group relative aspect-[4/5] cursor-pointer overflow-hidden rounded-3xl bg-slate-100 shadow-sm lg:aspect-auto lg:h-full">
+            <div className="group relative aspect-[4/5] cursor-pointer overflow-hidden rounded-3xl bg-slate-100 shadow-sm lg:aspect-auto lg:h-full lg:min-h-0">
               <img
-                src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80"
+                src={oversizeJersey}
                 alt="Oversized fit"
-                className="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-105"
+                // Added 'absolute inset-0' here!
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-105"
                 loading="lazy"
                 decoding="async"
               />
@@ -170,15 +136,17 @@ const Home = () => {
               </div>
             </div>
 
-            {/* RIGHT COLUMN (Converted to a flex column so the children can flex-1 to split the height) */}
-            <div className="flex flex-col gap-6 lg:h-full">
+            {/* RIGHT COLUMN */}
+            {/* Added lg:min-h-0 here to force the flex column to respect the 600px height */}
+            <div className="flex flex-col gap-6 lg:h-full lg:min-h-0">
               {/* TOP RIGHT */}
-              {/* 3. THE FIX: flex-1 makes this take up exactly 50% of the remaining height */}
-              <div className="group relative aspect-[4/3] flex-1 cursor-pointer overflow-hidden rounded-3xl bg-slate-100 shadow-sm lg:aspect-auto">
+              {/* Added lg:min-h-0 here so the top half shrinks perfectly */}
+              <div className="group relative aspect-[4/3] flex-1 cursor-pointer overflow-hidden rounded-3xl bg-slate-100 shadow-sm lg:aspect-auto lg:min-h-0">
                 <img
-                  src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1200&q=80"
+                  src={collarJersey}
                   alt="Collar detail"
-                  className="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-105"
+                  // Added 'absolute inset-0' here!
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-105"
                   loading="lazy"
                   decoding="async"
                 />
@@ -189,13 +157,14 @@ const Home = () => {
               </div>
 
               {/* BOTTOM RIGHT SPLIT */}
-              {/* 4. THE FIX: flex-1 makes this row take up the other 50% of the height */}
-              <div className="grid flex-1 gap-6 sm:grid-cols-2">
-                <div className="group relative aspect-square cursor-pointer overflow-hidden rounded-3xl bg-slate-100 shadow-sm lg:aspect-auto lg:h-full">
+              {/* Added lg:min-h-0 here so the bottom half shrinks perfectly */}
+              <div className="grid flex-1 gap-6 sm:grid-cols-2 lg:min-h-0">
+                <div className="group relative aspect-square cursor-pointer overflow-hidden rounded-3xl bg-slate-100 shadow-sm lg:aspect-auto lg:h-full lg:min-h-0">
                   <img
-                    src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80"
+                    src={normalJersey}
                     alt="Normal fit"
-                    className="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-105"
+                    // Added 'absolute inset-0' here!
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-105"
                     loading="lazy"
                     decoding="async"
                   />
@@ -205,11 +174,12 @@ const Home = () => {
                   </div>
                 </div>
 
-                <div className="group relative aspect-square cursor-pointer overflow-hidden rounded-3xl bg-slate-100 shadow-sm lg:aspect-auto lg:h-full">
+                <div className="group relative aspect-square cursor-pointer overflow-hidden rounded-3xl bg-slate-100 shadow-sm lg:aspect-auto lg:h-full lg:min-h-0">
                   <img
-                    src="https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=900&q=80"
+                    src={fullSleeve}
                     alt="Full sleeve"
-                    className="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-105"
+                    // Added 'absolute inset-0' here!
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-105"
                     loading="lazy"
                     decoding="async"
                   />
@@ -224,46 +194,33 @@ const Home = () => {
         </div>
       </section>
 
-      {/* FEATURED GRID */}
-      <section className="bg-slate-50 py-16">
-        <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
-          <div className="flex items-end justify-between border-b border-slate-200 pb-4">
-            <h2 className="text-2xl font-semibold uppercase tracking-[0.2em] text-slate-900">
-              Featured Kits
-            </h2>
-            <Link
-              to="/all"
-              className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 transition hover:text-slate-900"
-            >
-              View All
-            </Link>
+      {/* STATEMENT */}
+      <section className="bg-slate-100">
+        <div className="mx-auto grid max-w-[1200px] gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.2fr_0.8fr] lg:px-8">
+          <div>
+            <p className="text-base uppercase tracking-[0.25em] text-slate-400">
+              A Symphony of Heritage
+            </p>
+            <h1 className="mt-4 text-4xl font-bold text-slate-900 sm:text-6xl">
+              Heritage and performance,
+              <br /> tailored for matchdays and the street.
+            </h1>
           </div>
-
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {featuredJerseys.map((jersey) => (
-              <div key={jersey.id} className="group">
-                <div className="aspect-[4/5] overflow-hidden rounded-3xl bg-white shadow-sm">
-                  <img
-                    src={jersey.image}
-                    alt={jersey.team}
-                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-                <div className="mt-4 flex items-start justify-between">
-                  <div>
-                    <h3 className="text-sm font-semibold text-slate-900">
-                      {jersey.team}
-                    </h3>
-                    <p className="text-xs text-slate-500">{jersey.edition}</p>
-                  </div>
-                  <span className="text-xs font-semibold text-slate-900">
-                    {jersey.price}
-                  </span>
-                </div>
-              </div>
-            ))}
+          <div className="flex flex-col justify-center space-y-4 text-base text-slate-600">
+            <p>
+              We collect limited drops, retro reissues, and everyday icons so
+              your wardrobe feels like a highlight reel.
+            </p>
+            <p>
+              Built for comfort, finished with detail, and verified regularly so
+              you can shop with confidence.
+            </p>
+            <Link
+              to="/latest"
+              className="inline-flex items-center gap-2 text-lg underline underline-offset-2 font-semibold uppercase tracking-[0.2em] text-slate-900"
+            >
+              See latest drops <ArrowRight size={14} />
+            </Link>
           </div>
         </div>
       </section>
@@ -283,30 +240,41 @@ const Home = () => {
             </Link>
           </div>
 
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {retroJerseys.map((jersey) => (
-              <div key={jersey.id} className="group">
-                <div className="aspect-[4/5] overflow-hidden rounded-3xl bg-white/10">
-                  <img
-                    src={jersey.image}
-                    alt={jersey.name}
-                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-                <div className="mt-4 flex items-start justify-between text-white/80">
-                  <div>
-                    <h3 className="text-sm font-semibold text-white">
-                      {jersey.name}
-                    </h3>
-                  </div>
-                  <span className="text-xs font-semibold text-white">
-                    {jersey.price}
-                  </span>
-                </div>
+          <div className="mt-10 -mx-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+            {isRetroLoading ? (
+              <div className="flex h-44 items-center justify-center">
+                <div className="h-8 w-8 animate-spin rounded-full border-4 border-white/30 border-t-white"></div>
               </div>
-            ))}
+            ) : retroJerseys.length === 0 ? (
+              <div className="py-8 text-sm text-white/70">
+                No retro jerseys available right now.
+              </div>
+            ) : (
+              <div className="flex gap-5">
+                {retroJerseys.map((jersey) => (
+                  <div
+                    key={jersey._id || jersey.id}
+                    className="w-[76vw] min-w-[260px] max-w-[320px] shrink-0 sm:w-[320px]"
+                  >
+                    <ProductCard
+                      theme="dark"
+                      product={{
+                        id: jersey._id || jersey.id,
+                        name: jersey.name,
+                        price: jersey.price,
+                        image:
+                          jersey.images?.[0] ||
+                          jersey.imageUrl ||
+                          jersey.image,
+                        hoverImage: jersey.images?.[1] || jersey.hoverImage,
+                        collarType: jersey.collarType,
+                        quality: jersey.quality,
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </section>
