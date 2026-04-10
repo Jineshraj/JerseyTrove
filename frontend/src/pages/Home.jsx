@@ -25,19 +25,14 @@ const Home = () => {
         const items = payload.data || payload.products || payload;
         const products = Array.isArray(items) ? items : [];
 
-        const retroItems = products.filter((product) => {
-          const category = String(product.category || "").toLowerCase();
-          const collection = String(product.collection || "").toLowerCase();
-          const type = String(product.type || "").toLowerCase();
-          const name = String(product.name || "").toLowerCase();
-
-          return (
-            category.includes("retro") ||
-            collection.includes("retro") ||
-            type.includes("retro") ||
-            name.includes("retro")
-          );
-        });
+        const retroItems = products.filter((product) =>
+          Array.isArray(product.categories)
+            ? product.categories.some(
+                (category) =>
+                  String(category).trim().toLowerCase() === "retro",
+              )
+            : false,
+        );
 
         setRetroJerseys(retroItems.slice(0, 10));
       } catch (error) {
@@ -274,6 +269,22 @@ const Home = () => {
                     />
                   </div>
                 ))}
+                <Link
+                  to="/retro"
+                  className="flex w-[76vw] min-w-[260px] max-w-[320px] shrink-0 items-center justify-center rounded-2xl border border-white/20 bg-white/5 p-6 text-center transition hover:border-white/50 hover:bg-white/10 sm:w-[320px]"
+                >
+                  <div className="space-y-2">
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/60">
+                      Explore More
+                    </p>
+                    <p className="text-lg font-bold text-white">
+                      See All Retro
+                    </p>
+                    <span className="inline-flex items-center gap-2 text-sm font-semibold text-white/90">
+                      Open Retro Vault <ArrowRight size={14} />
+                    </span>
+                  </div>
+                </Link>
               </div>
             )}
           </div>

@@ -4,8 +4,6 @@
 // - formData: state object from parent
 // - handleChange/handleCheckBoxChange: handlers from parent
 
-import { file } from "zod";
-
 // - nameInputRef: ref from parent for auto-focus
 const JerseyFormModal = ({
   isOpen,

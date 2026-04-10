@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import ConfirmModal from "../components/admin/ConfirmModal";
 
 function CartItem({ item, onQty, onRemove }) {
   const primaryImage =
@@ -58,7 +59,7 @@ function CartItem({ item, onQty, onRemove }) {
         <div className="flex items-center justify-between border-t border-slate-200 pt-4">
           <div className="flex items-center gap-3">
             <button
-              onClick={() => onQty(item.id, -1)}
+              onClick={() => onQty(item._id || item.id, -1)}
               className="h-8 w-8 rounded-full border border-slate-300 text-sm font-semibold text-slate-700 transition hover:border-slate-900 hover:text-slate-900"
             >
               -
@@ -67,7 +68,7 @@ function CartItem({ item, onQty, onRemove }) {
               {String(item.qty || 1).padStart(2, "0")}
             </span>
             <button
-              onClick={() => onQty(item.id, 1)}
+              onClick={() => onQty(item._id || item.id, 1)}
               className="h-8 w-8 rounded-full border border-slate-300 text-sm font-semibold text-slate-700 transition hover:border-slate-900 hover:text-slate-900"
             >
               +
@@ -75,7 +76,7 @@ function CartItem({ item, onQty, onRemove }) {
           </div>
 
           <button
-            onClick={() => onRemove(item.id)}
+            onClick={() => onRemove(item._id || item.id)}
             className="text-[10px] font-semibold uppercase tracking-[0.15em] text-slate-400 transition hover:text-slate-700"
           >
             Remove
@@ -90,6 +91,8 @@ export default function CartPage() {
   const { cartItems, updateQty, removeItem } = useCart();
   const [promoOpen, setPromoOpen] = useState(false);
   const [promoCode, setPromoCode] = useState("");
+  const [removeConfirmOpen, setRemoveConfirmOpen] = useState(false);
+  const [pendingRemoveId, setPendingRemoveId] = useState(null);
 
   const subtotal = cartItems.reduce(
     (acc, i) => acc + (i.price || 0) * (i.qty || 1),
@@ -99,6 +102,37 @@ export default function CartPage() {
   const shipping = subtotal > 8000 ? 0 : 299;
   const total = subtotal + shipping;
   const freeShipGap = 8000 - subtotal;
+
+  const openRemoveConfirm = (itemId) => {
+    setPendingRemoveId(itemId);
+    setRemoveConfirmOpen(true);
+  };
+
+  const closeRemoveConfirm = () => {
+    setPendingRemoveId(null);
+    setRemoveConfirmOpen(false);
+  };
+
+  const confirmRemove = () => {
+    if (pendingRemoveId == null) return;
+    removeItem(pendingRemoveId);
+    closeRemoveConfirm();
+  };
+
+  const handleQtyChange = (itemId, delta) => {
+    if (delta !== -1) {
+      updateQty(itemId, delta);
+      return;
+    }
+
+    const item = cartItems.find((cartItem) => (cartItem._id || cartItem.id) === itemId);
+    const currentQty = item?.qty || 1;
+    if (currentQty <= 1) {
+      openRemoveConfirm(itemId);
+      return;
+    }
+    updateQty(itemId, delta);
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
@@ -134,8 +168,8 @@ export default function CartPage() {
                   <CartItem
                     key={item._id || item.id}
                     item={item}
-                    onQty={updateQty}
-                    onRemove={removeItem}
+                    onQty={handleQtyChange}
+                    onRemove={openRemoveConfirm}
                   />
                 ))}
               </div>
@@ -154,7 +188,9 @@ export default function CartPage() {
 
           <div className="w-full lg:w-[360px] lg:sticky lg:top-8">
             <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_30px_80px_-60px_rgba(15,23,42,0.5)] sm:p-8">
-              <h2 className="text-2xl font-semibold text-slate-900">Order Summary</h2>
+              <h2 className="text-2xl font-semibold text-slate-900">
+                Order Summary
+              </h2>
               <div className="mt-6 space-y-4">
                 <div className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400">
                   <span>Subtotal</span>
@@ -176,7 +212,9 @@ export default function CartPage() {
                 </div>
                 <div className="flex items-center justify-between border-t border-slate-200 pt-5 text-sm font-semibold uppercase tracking-[0.15em] text-slate-900">
                   <span>Total</span>
-                  <span className="text-lg font-bold">Rs {total.toLocaleString("en-IN")}</span>
+                  <span className="text-lg font-bold">
+                    Rs {total.toLocaleString("en-IN")}
+                  </span>
                 </div>
               </div>
 
@@ -186,7 +224,9 @@ export default function CartPage() {
                   className="flex w-full items-center justify-between text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500 transition hover:text-slate-700"
                 >
                   Add Promo Code
-                  <span className={`text-xs transition ${promoOpen ? "rotate-180" : "rotate-0"}`}>
+                  <span
+                    className={`text-xs transition ${promoOpen ? "rotate-180" : "rotate-0"}`}
+                  >
                     v
                   </span>
                 </button>
@@ -196,7 +236,9 @@ export default function CartPage() {
                     <input
                       type="text"
                       value={promoCode}
-                      onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                      onChange={(e) =>
+                        setPromoCode(e.target.value.toUpperCase())
+                      }
                       placeholder="ENTER CODE"
                       className="flex-1 bg-transparent text-xs font-semibold uppercase tracking-[0.15em] text-slate-900 outline-none placeholder:text-slate-300"
                     />
@@ -214,7 +256,8 @@ export default function CartPage() {
               {shipping > 0 && (
                 <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">
-                    Add Rs {freeShipGap.toLocaleString("en-IN")} more for complimentary shipping.
+                    Add Rs {freeShipGap.toLocaleString("en-IN")} more for
+                    complimentary shipping.
                   </p>
                 </div>
               )}
@@ -231,7 +274,9 @@ export default function CartPage() {
                   className="px-2 py-4 text-center"
                   style={{ borderRight: i < 2 ? "1px solid #e2e8f0" : "none" }}
                 >
-                  <div className="text-sm font-semibold text-slate-700">{b.icon}</div>
+                  <div className="text-sm font-semibold text-slate-700">
+                    {b.icon}
+                  </div>
                   <p className="mt-1 text-[8px] font-semibold uppercase tracking-[0.15em] text-slate-400">
                     {b.label}
                   </p>
@@ -241,6 +286,16 @@ export default function CartPage() {
           </div>
         </div>
       </div>
+
+      <ConfirmModal
+        open={removeConfirmOpen}
+        title="Remove this item?"
+        message="This jersey will be removed from your cart."
+        confirmLabel="Remove"
+        onCancel={closeRemoveConfirm}
+        onConfirm={confirmRemove}
+        confirmClassName="rounded-full border border-rose-300 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-700 transition hover:border-rose-400 hover:bg-rose-100"
+      />
     </div>
   );
 }

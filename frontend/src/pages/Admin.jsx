@@ -8,7 +8,7 @@ import ConfirmModal from "../components/admin/ConfirmModal.jsx";
 import {
   uploadToCloudinary,
   uploadMultipleToCloudinary,
-} from "../utils/Cloudinary.js";
+} from "../utils/cloudinary.js";
 
 // Shape of the jersey form (used for reset + default values)
 const initialForm = {

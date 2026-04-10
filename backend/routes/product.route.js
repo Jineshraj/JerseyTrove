@@ -30,7 +30,7 @@ router.get("/", async (req, res) => {
     const allJerseys = await Product.find({}); // // The empty object {} tells Mongoose to find ALL documents in the collection
 
     //Send a success message and data back
-    res.status(201).json({
+    res.status(200).json({
       success: true,
       data: allJerseys,
     });
