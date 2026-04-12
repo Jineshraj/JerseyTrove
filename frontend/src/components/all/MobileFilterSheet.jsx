@@ -24,11 +24,11 @@ const MobileFilterSheet = ({ open, onClose, onClear, onChange, filters }) => {
           <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
           <div className="flex items-center gap-3">
             <button
-              className="text-xs font-semibold uppercase tracking-wide text-gray-400"
+              className="btn-secondary btn-filter btn-primary-sm rounded-full"
               type="button"
               onClick={onClear}
             >
-              Clear
+              <span>Clear</span>
             </button>
             <button
               className="text-xs font-semibold uppercase tracking-wide text-gray-500"

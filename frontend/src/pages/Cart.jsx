@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import ConfirmModal from "../components/admin/ConfirmModal";
+import { toast } from "sonner";
 
 function CartItem({ item, onQty, onRemove }) {
   const primaryImage =
@@ -88,6 +89,7 @@ function CartItem({ item, onQty, onRemove }) {
 }
 
 export default function CartPage() {
+  const navigate = useNavigate();
   const { cartItems, updateQty, removeItem } = useCart();
   const [promoOpen, setPromoOpen] = useState(false);
   const [promoCode, setPromoCode] = useState("");
@@ -132,6 +134,14 @@ export default function CartPage() {
       return;
     }
     updateQty(itemId, delta);
+  };
+
+  const handleProceedToCheckout = () => {
+    if (cartItems.length === 0) {
+      toast.error("Your cart is empty");
+      return;
+    }
+    navigate("/checkout");
   };
 
   return (
@@ -249,8 +259,12 @@ export default function CartPage() {
                 )}
               </div>
 
-              <button className="mt-6 w-full rounded-full bg-slate-900 px-6 py-4 text-[11px] font-semibold uppercase tracking-[0.3em] text-white transition hover:bg-slate-800">
-                Proceed to Checkout
+              <button
+                type="button"
+                onClick={handleProceedToCheckout}
+                className="btn-primary btn-primary-md mt-6 w-full"
+              >
+                <span>Proceed to Checkout</span>
               </button>
 
               {shipping > 0 && (

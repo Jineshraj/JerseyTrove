@@ -12,17 +12,11 @@ const FilterSidebar = ({ onClear, onChange, filters }) => {
         <div className="flex justify-between">
           <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
           <button
-            className="relative overflow-hidden group rounded-full border border-gray-200 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-gray-600 transition hover:border-gray-300 hover:text-gray-900"
+            className="btn-secondary btn-filter btn-primary-sm rounded-full"
             type="button"
             onClick={onClear}
           >
-            {/* The hidden black background that slides in from the left */}
-            <span className="absolute inset-0 h-full w-full rounded-full bg-black -translate-x-[110%] transition-transform duration-500 ease-out group-active:translate-x-0 group-hover:translate-x-0"></span>
-
-            {/* The text and icon sitting on top */}
-            <span className="relative z-10 flex items-center justify-center gap-2 transition-colors duration-300 group-active:text-white group-hover:text-white">
-              Clear
-            </span>
+            <span>Clear</span>
           </button>
         </div>
         <p className="text-sm text-gray-500">

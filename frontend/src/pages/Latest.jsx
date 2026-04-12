@@ -92,18 +92,18 @@ const Latest = () => {
             {/* Mobile top controls */}
             <div className="sticky top-16 z-20 -mx-4 mb-6 flex items-center justify-between border-b border-gray-200 bg-white/75 px-4 py-3 backdrop-blur md:hidden">
               <button
-                className="rounded-full border border-gray-200 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-wide text-gray-700 shadow-sm"
+                className="btn-secondary btn-filter btn-primary-sm btn-sort-filter rounded-full"
                 type="button"
                 onClick={() => setIsFilterOpen(true)}
               >
-                Filters
+                <span>Filters</span>
               </button>
               <button
-                className="rounded-full border border-gray-200 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-wide text-gray-700 shadow-sm"
+                className="btn-secondary btn-filter btn-primary-sm btn-sort-filter rounded-full"
                 type="button"
                 onClick={() => setIsSortOpen(true)}
               >
-                Sort
+                <span>Sort</span>
               </button>
             </div>
 
@@ -130,7 +130,8 @@ const Latest = () => {
                       id: jersey._id || jersey.id,
                       name: jersey.name,
                       price: jersey.price,
-                      image: jersey.images?.[0] || jersey.imageUrl || jersey.image,
+                      image:
+                        jersey.images?.[0] || jersey.imageUrl || jersey.image,
                       hoverImage: jersey.hoverImage,
                       collarType: jersey.collarType,
                       quality: jersey.quality,

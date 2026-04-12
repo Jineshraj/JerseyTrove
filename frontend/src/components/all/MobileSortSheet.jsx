@@ -36,14 +36,14 @@ const MobileSortSheet = ({ open, onClose, onSelect }) => {
           {SORT_OPTIONS.map((option) => (
             <button
               key={option.value}
-              className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-left text-sm font-semibold text-gray-700 transition hover:border-gray-300 hover:text-gray-900"
+              className="btn-secondary btn-filter btn-primary-md rounded-2xl w-full justify-start text-left"
               type="button"
               onClick={() => {
                 onSelect?.(option.value);
                 onClose();
               }}
             >
-              {option.label}
+              <span>{option.label}</span>
             </button>
           ))}
         </div>

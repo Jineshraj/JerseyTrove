@@ -12,6 +12,7 @@ import NationalTeams from "../pages/NationalTeams";
 import Clubs from "../pages/Clubs";
 import ProductDetails from "../pages/ProductDetails";
 import Cart from "../pages/Cart";
+import Checkout from "../pages/Checkout";
 
 const AppRoutes = () => {
   return (
@@ -29,6 +30,7 @@ const AppRoutes = () => {
         {/* PROTECTED ROUTES : Only enter if logged in */}
         <Route element={<ProtectedRoutes />}>
           <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
           <Route path="/orders" element />
           <Route path="/favourite" element />
           <Route path="/profile" element />

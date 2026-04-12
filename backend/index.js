@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import productRoutes from "./routes/product.route.js";
 import userRoutes from "./routes/user.route.js";
+import orderRoutes from "./routes/order.route.js";
 
 dotenv.config();
 
@@ -28,6 +29,9 @@ app.use("/api/products", productRoutes);
 
 //dealing with Users
 app.use("/api/users", userRoutes);
+
+//dealing with Orders
+app.use("/api/orders", orderRoutes);
 
 app.listen(PORT, () => {
   console.log(`The server is running on PORT ${PORT}`);

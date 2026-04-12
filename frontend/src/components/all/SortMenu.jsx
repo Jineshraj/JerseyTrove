@@ -28,18 +28,12 @@ const SortMenu = ({ value, onSelect }) => {
   return (
     <div className="relative" ref={menuRef}>
       <button
-        className="relative overflow-hidden group flex items-center gap-2 rounded-full border border-black bg-white px-4 py-2 text-xs font-semibold uppercase tracking-wide text-gray-700 shadow-sm transition hover:border-gray-300 hover:text-gray-900"
+        className="btn-secondary btn-filter btn-primary-sm rounded-full flex items-center gap-2"
         type="button"
         onClick={() => setOpen((prev) => !prev)}
       >
-        {/* The hidden black background that slides in from the left */}
-        <span className="absolute inset-0 w-full h-full bg-black -translate-x-[110%] rounded-full transition-transform duration-500 ease-out group-active:translate-x-0 group-hover:translate-x-0"></span>
-
-        {/* The text and icon sitting on top */}
-        <span className="relative z-10 flex items-center justify-center gap-2 transition-colors duration-300 group-active:text-white group-hover:text-white">
-          Sort
-          <ArrowDownUpIcon size={14} />
-        </span>
+        <span>Sort</span>
+        <ArrowDownUpIcon size={14} />
       </button>
 
       {open && (

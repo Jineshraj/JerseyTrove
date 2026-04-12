@@ -88,18 +88,18 @@ const All = () => {
             {/* Mobile top controls */}
             <div className="sticky top-16 z-20 -mx-4 mb-6 flex items-center justify-between border-b border-gray-200 bg-white/75 px-4 py-3 backdrop-blur md:hidden">
               <button
-                className="rounded-full border border-gray-200 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-wide text-gray-700 shadow-sm"
+                className="btn-secondary btn-filter btn-primary-sm rounded-full btn-sort-filter"
                 type="button"
                 onClick={() => setIsFilterOpen(true)}
               >
-                Filters
+                <span>Filters</span>
               </button>
               <button
-                className="rounded-full border border-gray-200 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-wide text-gray-700 shadow-sm"
+                className="btn-secondary btn-filter btn-primary-sm btn-sort-filter rounded-full"
                 type="button"
                 onClick={() => setIsSortOpen(true)}
               >
-                Sort
+                <span>Sort</span>
               </button>
             </div>
 

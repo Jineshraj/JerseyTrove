@@ -1,6 +1,6 @@
-import { ArrowLeftCircle, LucideShoppingCart, MoveLeft } from "lucide-react";
+import { ArrowLeftCircle, LucideShoppingCart } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { toast } from "sonner";
 
@@ -161,7 +161,7 @@ const ProductDetails = () => {
                 <div className="flex flex-col flex-wrap gap-3">
                   <button
                     type="button"
-                    className="rounded-full bg-black px-6 py-3 text-sm font-semibold text-white shadow-sm transition border border-white hover:bg-white hover:text-black hover:border-black fo flex justify-center items-center gap-2.5"
+                    className="btn-primary btn-primary-md w-full flex justify-center items-center gap-2.5"
                     onClick={() => handleCart(product)}
                   >
                     <LucideShoppingCart size={20} /> <span>Add to Cart</span>
@@ -170,9 +170,9 @@ const ProductDetails = () => {
                   <div className="flex gap-2">
                     <button
                       type="button"
-                      className="rounded-full flex-2 bg-black px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
+                      className="btn-secondary btn-primary-md w-full"
                     >
-                      Buy Now
+                      <span>Buy Now</span>
                     </button>
                   </div>
                 </div>

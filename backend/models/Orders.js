@@ -14,6 +14,16 @@ const orderSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    customerName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    mobileNumber: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     shippingAddress: {
       type: String, // You can make this a more complex object later, keeping it simple for now
       required: true,
@@ -39,9 +49,46 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    paymentStatus: {
+      type: String,
+      enum: ["PENDING", "PAID", "FAILED"],
+      default: "PENDING",
+    },
+    paymentRef: {
+      type: String,
+      default: "",
+      trim: true,
+    },
     isPaid: {
       type: Boolean,
       default: false, // Flips to true once Razorpay confirms the transaction
+    },
+    orderStatus: {
+      type: String,
+      enum: ["PLACED", "CONFIRMED", "PACKED", "SHIPPED", "DELIVERED", "CANCELLED"],
+      default: "PLACED",
+    },
+    courierName: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    trackingId: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    isDelivered: {
+      type: Boolean,
+      default: false,
+    },
+    deliveredAt: {
+      type: Date,
+    },
+    notes: {
+      type: String,
+      default: "",
+      trim: true,
     },
   },
   {
